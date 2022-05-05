@@ -1,0 +1,7 @@
+{
+  "name": "TPVHost",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
