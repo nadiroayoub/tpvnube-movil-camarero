@@ -1,0 +1,39 @@
+ion-toolbar {
+  --background: #57ae51;
+  --color: #ffffff;
+}
+ion-content {
+  ion-card {
+    display: inline-block !important;
+    width: 40% !important;
+    cursor: pointer;
+    &.isDisponible {
+      background-color: #32b768;
+    }
+    &.noIsDisponible {
+      background-color: #e33535;
+      cursor: not-allowed;
+    }
+    &.pedidoFinalizado {
+      background-color: #dc9b1c;
+    }
+    ion-card-subtitle {
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      color: #ffffff;
+    }
+    ion-card-title {
+      font-size: 12px;
+      font-weight: Regular;
+      text-align: center;
+      color: #ffffff;
+    }
+    ion-col {
+      display: flex;
+    }
+    ion-card {
+      padding: 5px;
+    }
+  }
+}
