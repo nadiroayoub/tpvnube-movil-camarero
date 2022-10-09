@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/blackLogo.png" alt="" width="40px" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="homescreen-content">
+    <div style="height: 250px; background-color: #ccd2dd">
+      <ion-item
+        *ngFor="let category of categoriesMenu"
+        class="fix-flex-column"
+        lines="none"
+      >
+        <ion-avatar slot="start">
+          <img alt="Silhouette of a person's head" src="{{category.imagen}}" />
+        </ion-avatar>
+        <ion-label>{{category.nombre}}</ion-label>
+      </ion-item>
+    </div>
+    <div style="height: 250px">
+      <ion-card *ngFor="let menuItem of menuItems;let i = index;">
+        <ion-item>
+          <ion-avatar slot="start">
+            <img src="{{menuItem.imagen}}" />
+          </ion-avatar>
+          <ion-label>
+            <h3>{{menuItem.nombre}}</h3>
+            <p>{{menuItem.precio}}</p>
+          </ion-label>
+        </ion-item>
+        <ion-footer>
+          <ion-row>
+            <ion-col center text-center>
+              <button>
+                <ion-icon name="remove-circle" (click)="decrement()"></ion-icon>
+              </button>
+            </ion-col>
+            <ion-col center text-center>
+              <span class="number_item">{{currentNumber}}</span>
+            </ion-col>
+            <ion-col center text-center>
+              <button>
+                <ion-icon name="add-circle" (click)="increment()"></ion-icon>
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-footer>
+      </ion-card>
+      <ion-button color="primary" expand="block" [disabled]=""
+        >Finalizar pedido</ion-button
+      >
+    </div>
+  </div>
+</ion-content>

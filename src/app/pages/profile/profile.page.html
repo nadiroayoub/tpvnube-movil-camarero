@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/blackLogo.png" alt="" width="40px" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="text-align: center">
+  <ion-card color="light">
+    <div class="img-wrapper">
+      <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      <ion-button color="light">
+        <ion-icon slot="icon-only" name="camera-outline" color="medium" (click)="openGallery()">
+        </ion-icon>
+      </ion-button>
+    </div>
+  </ion-card>
+  <form [formGroup]="todo" (ngSubmit)="logForm()">
+    <ion-item>
+      <ion-label>Nombre y apellidos</ion-label>
+      <ion-input type="text" formControlName="nombreApellidos"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Nombre de usuario</ion-label>
+      <ion-input formControlName="nombreUsuario"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Correo electronico</ion-label>
+      <ion-input formControlName="correo"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Telefono</ion-label>
+      <ion-input formControlName="telefono"></ion-input>
+    </ion-item>
+    <button ion-button type="submit" [disabled]="!todo.valid">Guardar</button>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar style="padding: 0 30px">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/home-icon.png" alt="" width="20px" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <img src="assets/icon/notification-ringing.png" alt="" width="25px" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

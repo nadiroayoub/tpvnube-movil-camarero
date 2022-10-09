@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'profile',
     pathMatch: 'full',
   },
   {
@@ -23,6 +23,21 @@ const routes: Routes = [
       import('./pages/forgetpassword/forgetpassword.module').then(
         (m) => m.ForgetpasswordPageModule
       ),
+  },
+  {
+    path: 'menu',
+    loadChildren: () =>
+      import('./pages/menu/menu.module').then((m) => m.MenuPageModule),
+  },
+  {
+    path: 'cuenta',
+    loadChildren: () =>
+      import('./pages/cuenta/cuenta.module').then((m) => m.CuentaPageModule),
+  },
+  {
+    path: 'profile',
+    loadChildren: () =>
+      import('./pages/profile/profile.module').then((m) => m.ProfilePageModule),
   },
 ];
 

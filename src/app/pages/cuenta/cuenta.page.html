@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/blackLogo.png" alt="" width="40px" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="text-align: center">
+  <ion-grid
+    size="12"
+    size-sm="8"
+    offset-sm="2"
+    style="display: flex; flex-flow: column; height: 100%"
+  >
+    <ion-card *ngFor="let menuItem of menuItems;let i = index;">
+      <ion-item>
+        <ion-avatar slot="start">
+          <img src="{{menuItem.imagen}}" />
+        </ion-avatar>
+        <ion-label>
+          <h3>{{menuItem.nombre}}</h3>
+          <p>{{menuItem.precio}}</p>
+        </ion-label>
+      </ion-item>
+      <ion-footer>
+        <ion-row>
+          <ion-col center text-center>
+            <button>
+              <ion-icon name="remove-circle" (click)="decrement()"></ion-icon>
+            </button>
+          </ion-col>
+          <ion-col center text-center>
+            <span class="number_item">{{currentNumber}}</span>
+          </ion-col>
+          <ion-col center text-center>
+            <button>
+              <ion-icon name="add-circle" (click)="increment()"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-footer>
+    </ion-card>
+    <ion-row class="ion-align-self-center">
+      <ion-col>
+        <ion-button [disabled]="" expand="block" text-center
+          >Imprimir cuenta</ion-button
+        >
+      </ion-col>
+    </ion-row>
+    <div class="fixed-content">
+      <ion-text>
+        <h6>Total</h6>
+      </ion-text>
+      <ion-text>
+        <h6>15.50€</h6>
+      </ion-text>
+    </div>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar style="padding: 0 30px">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/home-icon.png" alt="" width="20px" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <img src="assets/icon/notification-ringing.png" alt="" width="25px" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

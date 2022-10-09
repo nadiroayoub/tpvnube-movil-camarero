@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,23 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  user: {
+    nombre: string;
+    rol: string;
+    imagen: string;
+  };
+  constructor(private menu: MenuController) {
+    this.user = {
+      nombre: 'Ayoub',
+      rol: 'Cocinero',
+      imagen: 'https://ionicframework.com/docs/img/demos/avatar.svg',
+    };
+  }
+
+  clickable() {
+    console.log('clicked');
+  }
+  openEnd() {
+    this.menu.close();
+  }
 }

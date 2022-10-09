@@ -1,0 +1,24 @@
+ion-col {
+  button {
+    background-color: transparent;
+    ion-icon {
+      color: #57ae51;
+    }
+  }
+}
+.ion-content {
+  position: relative;
+}
+.fixed-content {
+  position: absolute;
+  width: 100vw;
+  bottom: 0;
+  background-color: #f8f8f8;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  ion-text {
+    color: #57ae51;
+    font-weight: bold;
+  }
+}

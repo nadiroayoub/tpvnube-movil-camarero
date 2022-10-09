@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+}
+
+.homescreen-content {
+  display: flex; /* displays flex-items (children) inline */
+  flex-direction: row; /* stacks them vertically */
+  height: 100vh; /* 100% of the viewport height */
+}
+
+.homescreen-content > {
+  div {
+    display: flex;
+    justify-content: center; /* horizontally centered */
+    align-items: center; /* vertically centered */
+    flex: 1; /* each stretches and takes equal height of the parent (50vh) */
+    flex-direction: column;
+    height: 100vh !important;
+    &:first-child {
+      max-width: 30% !important;
+      ion-item::part(native) {
+        display: flex !important;
+        flex-direction: column !important;
+        background-color: transparent;
+        .item-inner {
+          --border-style: none;
+        }
+      }
+    }
+    &:nth-child(2) {
+      max-width: 70% !important;
+      ion-col {
+        button {
+          background-color: transparent;
+          ion-icon {
+            color: #57ae51;
+          }
+        }
+      }
+    }
+  }
+}

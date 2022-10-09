@@ -4,16 +4,37 @@
     <ion-buttons slot="start">
       <ion-menu-button menu="main-menu"></ion-menu-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/blackLogo.png" alt="" width="40px" />
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-card *ngFor="let mesa of mesas;let i = index;"
-      [ngClass]="mesa.estado === 'disponible' ? 'isDisponible' : (mesa.estado === 'finalizado' ? 'pedidoFinalizado': 'noIsDisponible') "
-    >
-      <ion-card-header>
-        <ion-card-subtitle>{{mesa.nombre}}</ion-card-subtitle>
-        <ion-card-title>{{mesa.estado}}</ion-card-title>
-      </ion-card-header>
-    </ion-card>
+  <ion-searchbar placeholder="Buscar mesas"></ion-searchbar>
+  <ion-card
+    *ngFor="let mesa of mesas;let i = index;"
+    [ngClass]="mesa.estado === 'disponible' ? 'isDisponible' : (mesa.estado === 'finalizado' ? 'pedidoFinalizado': 'noIsDisponible') "
+  >
+    <ion-card-header>
+      <ion-card-subtitle>{{mesa.nombre}}</ion-card-subtitle>
+      <ion-card-title>{{mesa.estado}}</ion-card-title>
+    </ion-card-header>
+  </ion-card>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar style="padding: 0 30px">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/home-icon.png" alt="" width="20px" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <img src="assets/icon/notification-ringing.png" alt="" width="25px" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
