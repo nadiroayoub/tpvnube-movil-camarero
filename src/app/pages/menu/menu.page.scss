@@ -17,6 +17,7 @@ body {
     flex-direction: column;
     height: 100vh !important;
     &:first-child {
+      padding-top: 2rem;
       max-width: 30% !important;
       ion-item::part(native) {
         display: flex !important;
@@ -26,8 +27,11 @@ body {
           --border-style: none;
         }
       }
+      justify-content: start;
     }
     &:nth-child(2) {
+      padding-top: 2rem;
+      justify-content: start;
       max-width: 70% !important;
       ion-col {
         button {
@@ -39,4 +43,11 @@ body {
       }
     }
   }
+}
+.menu-item {
+  width: 90% !important;
+  margin: 0 !important;
+}
+.category-item {
+  
 }

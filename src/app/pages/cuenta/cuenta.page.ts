@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cuenta',
@@ -8,8 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class CuentaPage implements OnInit {
   currentNumber = 0;
   menuItems: { nombre: string; precio: string; imagen: string }[];
-
-  constructor() {}
+  public cuentaDescargada = false;
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.menuItems = [
@@ -40,6 +41,21 @@ export class CuentaPage implements OnInit {
   decrement() {
     if (this.currentNumber > 0) {
       this.currentNumber--;
+    }
+  }
+  openCuenta() {
+    this.cuentaDescargada = true;
+  }
+  openFactura() {
+    if (this.cuentaDescargada === true) {
+      this.router.navigate(['/factura']);
+      const btn = document.querySelector(
+        'imprimirCuenta'
+      ) as HTMLButtonElement | null;
+      if (btn != null) {
+        btn.disabled = true;
+        btn.classList.remove('active');
+      }
     }
   }
 }

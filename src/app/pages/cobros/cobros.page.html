@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/blackLogo.png" alt="" width="40px" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <ng-container matColumnDef="mesa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mesa</th>
+      <td mat-cell *matCellDef="let cobro">{{cobro.mesa}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="fecha">
+      <th mat-header-cell *matHeaderCellDef>Fecha y Hora</th>
+      <td mat-cell *matCellDef="let cobro">{{cobro.fecha | date: 'short'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="importe">
+      <th mat-header-cell *matHeaderCellDef>Importe</th>
+      <td mat-cell *matCellDef="let cobro">{{cobro.importe}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[1, 2, 5]"
+    showFirstLastButtons
+  ></mat-paginator>
+</ion-content>
+<ion-footer>
+  <ion-toolbar style="padding: 0 30px">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/home-icon.png" alt="" width="20px" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <img src="assets/icon/notification-ringing.png" alt="" width="25px" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

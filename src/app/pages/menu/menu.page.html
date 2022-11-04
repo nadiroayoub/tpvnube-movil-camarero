@@ -16,18 +16,26 @@
   <div class="homescreen-content">
     <div style="height: 250px; background-color: #ccd2dd">
       <ion-item
-        *ngFor="let category of categoriesMenu"
-        class="fix-flex-column"
+        *ngFor="let category of categoriesMenu;let i = index"
+        class="fix-flex-column category-item"
         lines="none"
+        (click)="activeCatogory(i)"
+        style="cursor: pointer"
       >
         <ion-avatar slot="start">
           <img alt="Silhouette of a person's head" src="{{category.imagen}}" />
         </ion-avatar>
-        <ion-label>{{category.nombre}}</ion-label>
+        <ion-label
+          [ngStyle]="{'color': (category.active===true) ? '#57ae51' : '#000'}"
+          >{{category.nombre}}</ion-label
+        >
       </ion-item>
     </div>
     <div style="height: 250px">
-      <ion-card *ngFor="let menuItem of menuItems;let i = index;">
+      <ion-card
+        class="menu-item"
+        *ngFor="let menuItem of menuItems;let i = index"
+      >
         <ion-item>
           <ion-avatar slot="start">
             <img src="{{menuItem.imagen}}" />
@@ -55,9 +63,43 @@
           </ion-row>
         </ion-footer>
       </ion-card>
-      <ion-button color="primary" expand="block" [disabled]=""
+      <ion-button
+        color="primary"
+        expand="block"
+        [disabled]=""
+        [routerLink]="['/home']"
+        >Confirmar pedido</ion-button
+      >
+      <ion-button
+        color="primary"
+        expand="block"
+        [disabled]=""
+        [routerLink]="['/cuenta']"
+        [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'block'}"
         >Finalizar pedido</ion-button
+      >
+      <ion-button
+        color="danger"
+        expand="block"
+        [disabled]=""
+        [routerLink]="['/home']"
+        class=""
+        >Cancelar pedido</ion-button
       >
     </div>
   </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar style="padding: 0 30px">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/home-icon.png" alt="" width="20px" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <!-- <img src="assets/icon/notification-ringing.png" alt="" width="25px" /> -->
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

@@ -22,3 +22,79 @@ ion-col {
     font-weight: bold;
   }
 }
+.ion-align-self-center {
+  background-color: #57ae51;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 79%;
+  border-radius: 20px;
+  ion-col {
+    height: 100%;
+  }
+  button {
+    height: 100%;
+    cursor: not-allowed;
+    &.active {
+      background: #ffffff;
+      color: #57ae51;
+      border-radius: 20px 0 0 20px;
+      font-weight: bolder;
+      cursor: pointer;
+    }
+    &.active-factura {
+      background: #ffffff;
+      color: #57ae51;
+      border-radius: 0 20px 20px 0;
+      font-weight: bolder;
+      cursor: pointer;
+    }
+  }
+}
+.fixed-content {
+  display: flex;
+  justify-content: space-around;
+  background-color: #57ae51;
+  color: white;
+  border-radius: 0 0 5rem 5rem;
+  margin: 0 1rem;
+}
+.pay-methods {
+  margin: 1rem 1rem;
+  ion-chip {
+    width: 100%;
+    border-radius: 10px;
+    ion-label {
+      color: black;
+    }
+  }
+}
+.ion-align-self-center:last-child {
+  width: 90%;
+  border-radius: 0px 0px 50px 50px;
+  /* ion-button {
+    .button-native {
+      span {
+        justify-content: space-around !important;
+      }
+    }
+  } */
+  ion-button::part(native) {
+    span {
+      --background-color: red;
+    }
+  }
+  .cobrar-button {
+    --border-radius: 0px 0px 50px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.cobrar-button_textos {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}

@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/blackLogo.png" alt="" width="40px" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="text-align: center">
+  <ion-grid
+    size="12"
+    size-sm="8"
+    offset-sm="2"
+    style="display: flex; flex-flow: column; height: 100%"
+  >
+    <ion-header>
+      <h5 class="title-page">Factura</h5>
+    </ion-header>
+    <form [formGroup]="todo" (ngSubmit)="logForm()">
+      <ion-item>
+        <ion-label>Nombre de la empresa</ion-label>
+        <ion-input type="text" formControlName="nombreEmpresa"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>DNI / CIF</ion-label>
+        <ion-input formControlName="cif"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Direccion</ion-label>
+        <ion-input formControlName="direccion"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Telefono</ion-label>
+        <ion-input formControlName="telefono"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Correo electronico</ion-label>
+        <ion-input formControlName="correoElectronico"></ion-input>
+      </ion-item>
+      <button ion-button type="submit" [disabled]="!todo.valid">Imprimir Factura</button>
+    </form>
+    <!-- <ion-row class="ion-align-self-center">
+      <ion-col>
+        <ion-button [disabled]="" expand="block" text-center
+          >Imprimir Factura</ion-button
+        >
+      </ion-col>
+    </ion-row> -->
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar style="padding: 0 30px">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/home-icon.png" alt="" width="20px" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <img src="assets/icon/notification-ringing.png" alt="" width="25px" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

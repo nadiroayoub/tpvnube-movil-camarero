@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'profile',
+    redirectTo: 'cuenta',
     pathMatch: 'full',
   },
   {
@@ -38,6 +38,21 @@ const routes: Routes = [
     path: 'profile',
     loadChildren: () =>
       import('./pages/profile/profile.module').then((m) => m.ProfilePageModule),
+  },
+  {
+    path: 'cobrar',
+    loadChildren: () =>
+      import('./pages/cobrar/cobrar.module').then((m) => m.CobrarPageModule),
+  },
+  {
+    path: 'factura',
+    loadChildren: () =>
+      import('./pages/factura/factura.module').then((m) => m.FacturaPageModule),
+  },
+  {
+    path: 'cobros',
+    loadChildren: () =>
+      import('./pages/cobros/cobros.module').then((m) => m.CobrosPageModule),
   },
 ];
 

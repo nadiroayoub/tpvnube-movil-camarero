@@ -19,45 +19,28 @@
     offset-sm="2"
     style="display: flex; flex-flow: column; height: 100%"
   >
+    <ion-header>
+      <h5 class="title-mesa">Mesa 2</h5>
+    </ion-header>
     <ion-card *ngFor="let menuItem of menuItems;let i = index;">
-      <ion-item style="height: 5rem">
-        <ion-avatar slot="start" style="margin-top: 0">
+      <ion-item>
+        <ion-avatar slot="start">
           <img src="{{menuItem.imagen}}" />
         </ion-avatar>
         <ion-label>
-          <h3 style="margin: 0">{{menuItem.nombre}}</h3>
+          <h3>{{menuItem.nombre}}</h3>
           <p>{{menuItem.precio}}</p>
         </ion-label>
       </ion-item>
     </ion-card>
-    <ion-row class="ion-align-self-center">
-      <ion-col>
-        <button
-          class="active imprimirCuenta"
-          ion-button
-          text-center
-          full
-          (click)="openCuenta()"
-        >
-          Imprimir cuenta
-        </button>
-      </ion-col>
-      <ion-col>
-        <button
-          ion-button
-          text-center
-          full
-          [disabled]="!cuentaDescargada"
-          [ngClass]="{'active-factura': cuentaDescargada === true}"
-          (click)="openFactura()"
-        >
-          Imprimir factura
-        </button>
-      </ion-col>
-      <!-- <ion-col col-6>
-        <button ion-button full></button>
-      </ion-col> -->
-    </ion-row>
+    <div class="fixed-content">
+      <ion-text>
+        <h6>Total</h6>
+      </ion-text>
+      <ion-text>
+        <h6>15.50€</h6>
+      </ion-text>
+    </div>
     <div class="pay-methods">
       <ion-chip>
         <ion-icon name="card" style="color: black"></ion-icon>
@@ -75,13 +58,8 @@
           [disabled]=""
           expand="block"
           text-center
-          class="cobrar-button"
+          >Cobrar</ion-button
         >
-          <div class="cobrar-button_textos">
-            <span class="cobrar-button_text">Cobrar</span>
-            <span class="cobrar-button_total">48€</span>
-          </div>
-        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

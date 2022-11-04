@@ -6,7 +6,10 @@
     <app-input type="email" placeholder="Correo electronico"></app-input>
     <app-input type="password" placeholder="Contraseña"></app-input>
     <ion-button shape="round">Acceder</ion-button>
-    <ion-text color="medium" style="display: block"
+    <ion-text
+      color="medium"
+      style="display: block; cursor: pointer"
+      [routerLink]="['/forgetpassword']"
       ><i>¿Ha olvidado la contraseña ? </i></ion-text
     >
   </form>

@@ -13,14 +13,22 @@
 </ion-header>
 
 <ion-content>
-  <ion-searchbar placeholder="Buscar mesas"></ion-searchbar>
+  <ion-searchbar
+    placeholder="Buscar mesas"
+    [(ngModel)]="enteredSearchValue"
+    (ngModelChange)="changed()"
+  ></ion-searchbar>
   <ion-card
-    *ngFor="let mesa of mesas;let i = index;"
-    [ngClass]="mesa.estado === 'disponible' ? 'isDisponible' : (mesa.estado === 'finalizado' ? 'pedidoFinalizado': 'noIsDisponible') "
+    *ngFor="let mesa of mesas | filter :enteredSearchValue ;let i = index;"
+    [ngClass]="mesa.Estado === 1 ? 'isDisponible' : (mesa.Estado === 2 ? 'ocupada':'pedidoFinalizado') "
+    (click)="navigateWithData(i)"
   >
     <ion-card-header>
-      <ion-card-subtitle>{{mesa.nombre}}</ion-card-subtitle>
-      <ion-card-title>{{mesa.estado}}</ion-card-title>
+      <ion-card-subtitle>Mesa {{mesa.Numero}}</ion-card-subtitle>
+      <ion-card-title
+        >{{mesa.Estado == 1 ? 'Disponible' : (mesa.Estado == 2 ? 'Ocupado':
+        'Pendiente de Pago')}}</ion-card-title
+      >
     </ion-card-header>
   </ion-card>
 </ion-content>
@@ -34,7 +42,7 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <img src="assets/icon/notification-ringing.png" alt="" width="25px" />
+      <!-- <img src="assets/icon/notification-ringing.png" alt="" width="25px" /> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

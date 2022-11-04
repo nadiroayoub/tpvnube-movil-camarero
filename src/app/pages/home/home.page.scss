@@ -7,13 +7,15 @@ ion-content {
     cursor: pointer;
     &.isDisponible {
       background-color: #32b768;
-    }
-    &.noIsDisponible {
-      background-color: #e33535;
-      cursor: not-allowed;
+      cursor: cursor;
     }
     &.pedidoFinalizado {
-      background-color: #dc9b1c;
+      background-color: #DC9B1C;
+      cursor: cursor;
+    }
+    &.ocupada {
+      background-color: #E33535;
+      cursor: cursor;
     }
     ion-card-subtitle {
       font-size: 14px;

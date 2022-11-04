@@ -4,19 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { CobrarPageRoutingModule } from './cobrar-routing.module';
 
-import { HomePage } from './home.page';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { CobrarPage } from './cobrar.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
-    Ng2SearchPipeModule
+    CobrarPageRoutingModule
   ],
-  declarations: [HomePage]
+  declarations: [CobrarPage]
 })
-export class HomePageModule {}
+export class CobrarPageModule {}

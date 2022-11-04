@@ -15,7 +15,7 @@ export class AppComponent {
   constructor(private menu: MenuController) {
     this.user = {
       nombre: 'Ayoub',
-      rol: 'Cocinero',
+      rol: 'Empleado',
       imagen: 'https://ionicframework.com/docs/img/demos/avatar.svg',
     };
   }
