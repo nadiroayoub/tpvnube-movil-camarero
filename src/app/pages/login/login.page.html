@@ -2,15 +2,60 @@
   <div id="header">
     <img src="assets/icon/TPVNubelogo.svg" alt="" />
   </div>
-  <form id="#form">
-    <app-input type="email" placeholder="Correo electronico"></app-input>
-    <app-input type="password" placeholder="Contraseña"></app-input>
-    <ion-button shape="round">Acceder</ion-button>
-    <ion-text
-      color="medium"
-      style="display: block; cursor: pointer"
-      [routerLink]="['/forgetpassword']"
-      ><i>¿Ha olvidado la contraseña ? </i></ion-text
-    >
+  <form id="#form" [formGroup]="loginFormulario">
+    <ion-card style="margin-top: -2rem; box-shadow: none">
+      <ion-card-content style="padding: 0">
+        <ion-item>
+          <ion-input
+            type="email"
+            placeholder="Correo electronico"
+            formControlName="email"
+            ngDefaultControl
+          ></ion-input>
+        </ion-item>
+        <app-error-message
+          [field]="loginFormulario.get('email')"
+          error="required"
+          message="Correo electrónico es obligatorio"
+        ></app-error-message>
+        <app-error-message
+          [field]="loginFormulario.get('email')"
+          error="email"
+          message="Correo electrónico es invalido"
+        ></app-error-message>
+        <ion-item>
+          <ion-input
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+            ngDefaultControl
+          ></ion-input>
+        </ion-item>
+        <app-error-message
+          [field]="loginFormulario.get('password')"
+          error="required"
+          message="Contraseña es obligatoria"
+          style="display: block"
+        ></app-error-message>
+        <ion-button
+          shape="round"
+          [disabled]="!loginFormulario.valid"
+          (click)="login()"
+          id="loginButton"
+          >Acceder</ion-button
+        >
+        <!-- [routerLink]="['/forgetpassword']" -->
+        <ion-button
+          color="medium"
+          style="display: block; cursor: pointer"
+          [disabled]="!loginFormulario.get('email').valid"
+          fill="clear"
+          color="dark"
+          (click)="forgetEmailPassword()"
+          id="recoverPasswordButton"
+          ><i>¿Ha olvidado la contraseña ? </i></ion-button
+        >
+      </ion-card-content>
+    </ion-card>
   </form>
 </ion-content>
