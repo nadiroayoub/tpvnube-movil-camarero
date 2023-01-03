@@ -1,18 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { Mesa } from 'src/app/model/Mesa';
 import { MesaService } from '../../services/apiMesa/mesa.service';
-
-export enum Estado {
-  disponible = 1,
-  ocupado = 2,
-  pendientePago = 3,
-}
-export interface Mesa {
-  Id: string;
-  Estado: Estado;
-  Numero: number;
-}
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -22,32 +13,39 @@ export interface Mesa {
 export class HomePage implements OnInit {
   mesas: Mesa[] = [];
   enteredSearchValue: any;
+  usuario;
   constructor(
     public router: Router,
     private navCtrl: NavController,
-    private apiMesaService: MesaService
+    private apiMesaService: MesaService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.getMesas();
-    console.log(this.enteredSearchValue);
+    setTimeout(() => {
+      this.usuario = this.authService.usuario;
+      console.log(this.usuario);
+      this.getMesas();
+    }, 3000);
   }
   changed() {
     console.log(this.enteredSearchValue);
   }
   getMesas(): any {
-    this.apiMesaService.getList().subscribe({
-      next: (res) => {
-        console.log(res);
-        res.forEach((mesa) => {
-          console.log(mesa);
-          this.mesas.push(mesa);
-        });
-      },
-      error: (err) => {
-        alert('Error while fetching Mesas:/Mesa/ReadAll records!');
-      },
+    // get mesas from user service
+    this.usuario.Negocio.Mesas.forEach((mesa) => {
+      this.mesas.push(mesa);
     });
+    // this.apiMesaService.getList().subscribe({
+    //   next: (res) => {
+    //     res.forEach((mesa) => {
+    //       this.mesas.push(mesa);
+    //     });
+    //   },
+    //   error: (err) => {
+    //     alert('Error while fetching Mesas:/Mesa/ReadAll records!');
+    //   },
+    // });
   }
   navigateWithData(mesaNumber: number) {
     const fullname = 'asa';

@@ -42,6 +42,7 @@ ion-card {
   }
 }
 form {
+  margin-top: 3rem;
   button {
     background-color: #32b768;
     padding: 0.5rem 1.5rem;
@@ -49,5 +50,14 @@ form {
     float: right;
     margin-right: 1rem;
     border-radius: 2px;
+  }
+  ion-input {
+    .native-input {
+      margin-bottom: 0 !important;
+      margin-bottom: 0 !important;
+      display: none;
+    }
+    --ion-margin-bottom: 0 !important;
+    --margin-bottom: 0 !important;
   }
 }

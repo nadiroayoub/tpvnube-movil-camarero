@@ -1,10 +1,15 @@
+import { Negocio } from "../model/Negocio";
+
 export interface AuthResponse {
-  ok: boolean;
-  uid: string;
-  name?: string;
-  token?: string;
-  msg?: string;
-  email: string;
+  Id: string;
+  Nombre: string;
+  Apellidos: string;
+  Telefono: string;
+  Email: string;
+  Dni: string;
+  Pass: string;
+  Foto: string;
+  Negocio: Negocio;
 }
 export interface Usuario {
   uid: string;

@@ -20,6 +20,8 @@ import {
 } from '../../store/login/login.actions';
 import { Subscription } from 'rxjs';
 import { loginFail } from '../../store/login/login.actions';
+import { Events } from 'ionic-angular';
+import { EventsService } from 'src/app/services/events/events.service';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +37,8 @@ export class LoginPage implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     private store: Store<AppState>,
-    private toastController: ToastController
+    private toastController: ToastController,
+    public events: EventsService
   ) {
     this.menu.close();
   }
@@ -78,6 +81,7 @@ export class LoginPage implements OnInit, OnDestroy {
       const password = this.loginFormulario.get('password').value;
       this.authService.login(email, password).subscribe(
         (user) => {
+          this.events.publishLogin('Ok');
           this.store.dispatch(loginSuccess({ user }));
         },
         (error) => {
@@ -92,7 +96,7 @@ export class LoginPage implements OnInit, OnDestroy {
         position: 'bottom',
         message: loginState.error.message,
         color: 'danger',
-        duration: 3000
+        duration: 3000,
       });
       toaster.present();
     }
@@ -120,23 +124,11 @@ export class LoginPage implements OnInit, OnDestroy {
     }
   }
   login() {
-    // const { email, password } = this.loginFormulario.value;
-    // this.authService.login(email, password).subscribe((token) => {
-    //   console.log(token);
-    //   if (typeof token !== 'object') {
-    //     this.router.navigateByUrl('/dashboard');
-    //   } else {
-    //     Swal.fire('Error', token, 'error');
-    //   }
-    // });
+    // this.events.publish('user:created', user, Date.now());
     this.store.dispatch(login());
   }
 
   forgetEmailPassword() {
-    // this.store.dispatch(show());
-    // setTimeout(() => {
-    //   this.store.dispatch(hide());
-    // }, 3000);
     this.store.dispatch(recoverPassword());
   }
 }

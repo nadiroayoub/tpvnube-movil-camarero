@@ -6,11 +6,19 @@
         <ion-card>
           <ion-item>
             <ion-avatar slot="start">
-              <img src="{{ user.imagen }}" />
+              <img
+                [src]="
+                  (imageByte == null)
+                    ? 'assets/images/profile-placeholder.png'
+                    : profileImgUrl?.url
+                "
+              />
             </ion-avatar>
             <ion-label>
-              <h3>{{ user.nombre }}</h3>
-              <p>{{ user.rol }}</p>
+              <h3>
+                {{ usuario?.Nombre + " " + usuario?.Apellidos }}
+              </h3>
+              <p>Empleado</p>
             </ion-label>
           </ion-item>
           <ion-footer> </ion-footer>
@@ -19,7 +27,7 @@
     </ion-header>
     <ion-content>
       <ion-list>
-        <ion-item (click)="clickable()" [routerLink]="['/profile']">
+        <ion-item (click)="goTo('profile')">
           <ion-icon name="person-outline" slot="start"></ion-icon>
           <ion-label>Perfil</ion-label>
         </ion-item>
@@ -27,15 +35,15 @@
           <ion-icon name="notifications-outline" slot="start"></ion-icon>
           <ion-label>Notificacion</ion-label>
         </ion-item> -->
-        <ion-item (click)="clickable()">
+        <ion-item (click)="(openEnd)">
           <ion-icon name="restaurant-outline" slot="start"></ion-icon>
           <ion-label>Mis mesas</ion-label>
         </ion-item>
-        <ion-item (click)="clickable()" [routerLink]="['/cobros']">
+        <ion-item (click)="goTo('cobros')">
           <ion-icon name="clipboard-outline" slot="start"></ion-icon>
           <ion-label>Cobros</ion-label>
         </ion-item>
-        <ion-item (click)="(openEnd)" [routerLink]="['/login']">
+        <ion-item (click)="goTo('login')">
           <ion-icon name="log-out-outline" slot="start"></ion-icon>
           <ion-label>Cerrar sesion</ion-label>
         </ion-item>

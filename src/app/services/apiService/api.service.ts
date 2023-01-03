@@ -13,7 +13,7 @@ import { throwError } from 'rxjs/internal/observable/throwError';
   providedIn: 'root',
 })
 export abstract class ApiService<T> {
-  private readonly apiUrl = environment.apiUrl + `/${this.getResourceUrl()}`;
+  protected readonly apiUrl = environment.apiUrl + `/${this.getResourceUrl()}`;
 
   constructor(protected httpClient: HttpClient) {}
 
@@ -54,8 +54,9 @@ export abstract class ApiService<T> {
       .pipe(catchError(this.handleError));
   }
 
-  private handleError(error: HttpErrorResponse) {
+  protected handleError(error: HttpErrorResponse) {
     // Handle the HTTP error here
     return throwError('Something wrong happened');
   }
+
 }
