@@ -26,7 +26,7 @@ export class EmpleadoService extends ApiService<Empleado> {
       .get(`${endpoint}?id=${id}&imageName=${imageName}`)
       .pipe(catchError(this.handleError));
   }
-  UpladImage(id: string, fileToUpload: any, password: string) {
+  UpladImage(id: string, fileToUpload: any, password: string): any {
     // headers
     var header = {
       headers: new HttpHeaders().set(
