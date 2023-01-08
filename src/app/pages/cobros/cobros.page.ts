@@ -1,8 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { ApiCobroService } from '../../services/apiCobro/api-cobro.service';
+import { ApiAuthService } from 'src/app/services/apiAuth/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { Subscription } from 'rxjs';
+import { ApiPedidoService } from '../../services/apiPedido/api-pedido.service';
 
 export interface Data {
   movies: string;
@@ -19,38 +24,55 @@ export class CobrosPage implements OnInit {
   public rows: any;
   public flex: any;
   public auto: any;
+  usuario: any;
+  subscription: Subscription;
 
   displayedColumns: string[] = ['mesa', 'fecha', 'importe'];
-  dataSource = new MatTableDataSource<any>([
-    {
-      mesa: 'mesa1',
-      fecha: new Date(),
-      importe: '45€',
-    },
-    {
-      mesa: 'mesa2',
-      fecha: new Date(),
-      importe: '35€',
-    },
-    {
-      mesa: 'mesa3',
-      fecha: new Date(),
-      importe: '36€',
-    },
-    {
-      mesa: 'mesa4',
-      fecha: new Date(),
-      importe: '28€',
-    },
-  ]);
+  dataSourceFromService: any[] = [];
+  dataSource = new MatTableDataSource<any>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private apiCobroService: ApiCobroService,
+    private apiAuthService: AuthService,
+    private apiPedidoService: ApiPedidoService
+  ) {}
   ngOnInit(): void {
-    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
+    // setTimeout(() => (this.dataSource.paginator = this.paginator));
+    console.log(this.usuario);
+    setTimeout(() => {
+      this.apiAuthService.usuario.subscribe((res) => {
+        this.usuario = res;
+        console.log(this.usuario);
+        this.apiCobroService
+          .getAllCobroOfEmpleado(this.usuario.Id)
+          .subscribe((cobros) => {
+            // get pedido of cobro
+            cobros.forEach((cobro) => {
+              this.apiPedidoService
+                .getPedidoOfCobro(cobro.Id)
+                .subscribe((pedido) => {
+                  this.dataSourceFromService.push({
+                    mesa: pedido.MesaComanda.Numero,
+                    fecha: cobro.Fecha,
+                    importe: cobro.Monto,
+                  });
+                });
+            });
+            this.dataSource.data = this.dataSourceFromService;
+            console.log(this.dataSource.data);
+            // this.dataSource.sort = this.sort;
+            // this.dataSource.paginator = this.paginator;
+          });
+      });
+    }, 500);
+  }
+  ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
-    setTimeout(() => (this.dataSource.paginator = this.paginator));
+    this.dataSource.paginator = this.paginator;
   }
 }

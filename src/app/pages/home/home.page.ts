@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Mesa } from 'src/app/model/Mesa';
 import { MesaService } from '../../services/apiMesa/mesa.service';
 import { AuthService } from '../../services/auth/auth.service';
+import { Observable } from 'rxjs/internal/Observable';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +17,7 @@ export class HomePage implements OnInit {
   mesas: Mesa[] = [];
   enteredSearchValue: any;
   usuario;
+  private updateUsuarioSubscription: Subscription;
   constructor(
     public router: Router,
     private navCtrl: NavController,
@@ -22,11 +26,20 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit() {
+    // this.updateUsuarioSubscription = interval(5000).subscribe(() => {
+    //   return this.authService.usuario.subscribe((response) => {
+    //     this.usuario = response;
+    //     console.log(this.usuario);
+    //   });
+    // });
     setTimeout(() => {
-      this.usuario = this.authService.usuario;
-      console.log(this.usuario);
-      this.getMesas();
-    }, 3000);
+      this.authService.usuario.subscribe((res) => {
+        this.usuario = res;
+        console.log(this.usuario);
+        this.getMesas();
+      });
+    }, 500);
+    // setTimeout(() => {}, 1000);
   }
   changed() {
     console.log(this.enteredSearchValue);

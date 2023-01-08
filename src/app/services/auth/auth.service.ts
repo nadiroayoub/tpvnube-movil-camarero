@@ -1,29 +1,28 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, Optional, SkipSelf } from '@angular/core';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { AuthResponse } from 'src/app/interfaces/interfaces';
 import { environment } from 'src/environments/environment.prod';
 import { User } from '../../model/user/User';
 import { EmpleadoService } from '../apiEmpleado/empleado.service';
 import { MesaService } from '../apiMesa/mesa.service';
+import { Usuario } from '../../interfaces/interfaces';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AuthService {
   private apiUrl: string = environment.apiUrl;
-  private _usuario;
+  private _usuario = new BehaviorSubject<Usuario | undefined>(null);
+  usuario = this._usuario.asObservable();
+
   private _imageByte: string | object = '';
   constructor(
     private http: HttpClient,
     private apiEmpleadoService: EmpleadoService,
     private apiMesaService: MesaService
-  ) {}
-
-  get usuario() {
-    return { ...this._usuario };
+  ) {
   }
+
   get imageByte() {
     return this._imageByte;
   }
@@ -51,7 +50,8 @@ export class AuthService {
         .getAllMesaOfNegocio(resp.Negocio.Id)
         .subscribe((res) => {
           resp.Negocio.Mesas = res;
-          this._usuario = {
+          var usuarioLocal;
+          usuarioLocal = {
             Id: resp.Id!,
             Nombre: resp.Nombre!,
             Apellidos: resp.Apellidos!,
@@ -62,14 +62,14 @@ export class AuthService {
             Foto: resp.Foto!,
             Negocio: resp.Negocio,
           };
-          filename = this._usuario.Foto.split('/').pop()!;
+          filename = usuarioLocal.Foto.split('/').pop()!;
           this.apiEmpleadoService
             .getImage(resp.Id, filename.substring(0, filename.lastIndexOf('.')))
             .subscribe((res) => {
-              this._usuario.Id,
-                filename.substring(0, filename.lastIndexOf('.'));
+              usuarioLocal.Id, filename.substring(0, filename.lastIndexOf('.'));
               this._imageByte = res;
             });
+          this._usuario.next(usuarioLocal);
         });
       return true;
     });
@@ -93,27 +93,7 @@ export class AuthService {
         },
         () => observer.error()
       );
-      //   tap((resp) => {
-      //     console.log(resp);
-      //   }),
-      //   map((resp) => resp),
-      //   catchError((err) => of(err))
-      // );
     });
-    // return new Observable<User>((observer) => {
-    // setTimeout(() => {
-    //   if (Email == 'error@email.com') {
-    //     observer.error({ message: 'Usuario no existe' });
-    //     observer.next();
-    //   } else {
-    //     const usuario = new User();
-    //     usuario.email = Email;
-    //     usuario.id = 'usuarioId';
-    //     observer.next(usuario);
-    //   }
-    //   observer.complete();
-    // }, 3000);
-    // });
   }
   logout() {
     sessionStorage.removeItem('token');

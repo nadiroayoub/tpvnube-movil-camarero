@@ -25,20 +25,24 @@ export class ProfilePage implements OnInit {
   emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   constructor(
     private formBuilder: FormBuilder,
-    private navCtrl: NavController,
     private camera: Camera,
     private authService: AuthService,
-    private http: HttpClient,
     private empleadoService: EmpleadoService,
     private router: Router
-  ) {}
+  ) {
+    this.formEmpleado = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      apellidos: ['', Validators.required],
+      dni: ['', [Validators.required, Validators.pattern(this.nifNieRegex)]],
+      email: ['', [Validators.required, Validators.pattern(this.emailRegex)]],
+      foto: [''],
+      telefono: [''],
+    });
+  }
   updateEmpleado() {
     // const filedata = new FormData();
     // filedata.append('image', this.imageUploaded, this.imageUploaded.name);
     // this.formEmpleado.get('foto').setValue(this.imageUploaded.name);
-    console.log(this.formEmpleado.value);
-    console.log(this.usuario.Id);
-    console.log(this.imageUploaded);
     // console.log(this.formEmpleado.get('pass')?.value);
     // this.usuario.Id, this.imageUploaded, this.duenyoForm.get('pass')?.value;
     // this.formEmpleado.controls['foto'].setValue(this.selectedFile.name);
@@ -68,8 +72,23 @@ export class ProfilePage implements OnInit {
       });
   }
 
-  ngOnInit() {
-    this.usuario = this.authService.usuario;
+  async ngOnInit() {
+    const usuario = await this.getUsuario();
+  }
+  // Get usuario
+  async getUsuario() {
+    setTimeout(() => {
+      return new Promise((resolve, reject) => {
+        this.authService.usuario.subscribe((res) => {
+          this.usuario = res;
+          resolve(this.usuario);
+          this.initializeForm();
+        });
+      });
+    }, 1000);
+  }
+  // initialize a form
+  initializeForm() {
     this.formEmpleado = this.formBuilder.group({
       nombre: [this.usuario.Nombre, Validators.required],
       apellidos: [this.usuario.Apellidos, Validators.required],
@@ -84,8 +103,6 @@ export class ProfilePage implements OnInit {
       foto: [this.usuario.Foto],
       telefono: [this.usuario.Telefono],
     });
-
-    console.log(this.imageUploaded);
   }
   openGallery() {
     const options: CameraOptions = {

@@ -9,12 +9,12 @@ import { environment } from 'src/environments/environment.prod';
   providedIn: 'root',
 })
 export class ApiAuthService {
-  private apiUrl: string = environment.apiUrl;
-  private _usuario!: Usuario;
+  // private apiUrl: string = environment.apiUrl;
+  // private _usuario!: Usuario;
 
-  get usuario() {
-    return { ...this._usuario };
-  }
+  // get usuario() {
+  //   return { ...this._usuario };
+  // }
 
   constructor(private http: HttpClient) {}
   // registro(name: string, email: string, password: string) {
@@ -32,20 +32,20 @@ export class ApiAuthService {
   //   );
   // }
 
-  login(Email: string, Pass: string) {
-    const url = `${this.apiUrl}/EmpleadoAnom/Login`;
-    const body = { Email, Pass };
-    return this.http.post<string>(url, body).pipe(
-      tap((resp) => {
-        console.log(resp);
-        if (resp != '') {
-          localStorage.setItem('token', resp);
-        }
-      }),
-      map((resp) => resp),
-      catchError((err) => of(err))
-    );
-  }
+  // login(Email: string, Pass: string) {
+  //   const url = `${this.apiUrl}/EmpleadoAnom/Login`;
+  //   const body = { Email, Pass };
+  //   return this.http.post<string>(url, body).pipe(
+  //     tap((resp) => {
+  //       console.log(resp);
+  //       if (resp != '') {
+  //         localStorage.setItem('token', resp);
+  //       }
+  //     }),
+  //     map((resp) => resp),
+  //     catchError((err) => of(err))
+  //   );
+  // }
 
   // validarToken(): Observable<boolean> {
   //   const url = `${this.apiUrl}/auth/renew`;
@@ -69,7 +69,7 @@ export class ApiAuthService {
   //   );
   // }
 
-  logout() {
-    localStorage.clear();
-  }
+  // logout() {
+  //   localStorage.clear();
+  // }
 }

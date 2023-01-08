@@ -10,11 +10,12 @@ import { DomSanitizer } from '@angular/platform-browser';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  providers: [AuthService],
 })
 export class AppComponent implements OnInit {
   usuario;
   profileImgUrl: any;
-  imageByte:any;
+  imageByte: any;
   imageUploaded = '';
   constructor(
     private menu: MenuController,
@@ -27,7 +28,9 @@ export class AppComponent implements OnInit {
     this.events.receiveLogin().subscribe((res: any) => {
       if (res == 'Ok') {
         setTimeout(() => {
-          this.usuario = this._authService.usuario;
+          this._authService.usuario.subscribe((res) => {
+            this.usuario = res;
+          });
           this.createProfileImage();
         }, 2000);
       }
