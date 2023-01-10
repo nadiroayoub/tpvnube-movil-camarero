@@ -1,10 +1,10 @@
 import { Negocio } from './Negocio';
 
-export interface Menu {
+export interface Plato {
   Id: number;
   Nombre: string;
-  Foto: string;
-  Precio: number;
   Stock: number;
-  NegocioMenu: Negocio;
+  Precio: number;
+  Foto: string;
+  NegocioPlato: Negocio;
 }

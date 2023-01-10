@@ -9,6 +9,7 @@ import { Usuario } from 'src/app/interfaces/interfaces';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',

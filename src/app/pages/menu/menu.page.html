@@ -14,7 +14,7 @@
 
 <ion-content>
   <div class="homescreen-content">
-    <div style="height: 250px; background-color: #ccd2dd">
+    <div style="height: 250px; background-color: #ccd2dd; position: fixed">
       <ion-item
         *ngFor="let category of categoriesMenu;let i = index"
         class="fix-flex-column category-item"
@@ -23,7 +23,11 @@
         style="cursor: pointer"
       >
         <ion-avatar slot="start">
-          <img alt="Silhouette of a person's head" src="{{category.imagen}}" />
+          <img
+            alt="Silhouette of a person's head"
+            src="{{category.imagen}}"
+            style="width: 60px; height: 60px"
+          />
         </ion-avatar>
         <ion-label
           [ngStyle]="{'color': (category.active===true) ? '#57ae51' : '#000'}"
@@ -31,62 +35,134 @@
         >
       </ion-item>
     </div>
-    <div style="height: 250px">
-      <ion-card
-        class="menu-item"
-        *ngFor="let menuItem of menuItems;let i = index"
-      >
-        <ion-item>
-          <ion-avatar slot="start">
-            <img src="{{menuItem.imagen}}" />
-          </ion-avatar>
-          <ion-label>
-            <h3>{{menuItem.nombre}}</h3>
-            <p>{{menuItem.precio}}</p>
-          </ion-label>
-        </ion-item>
-        <ion-footer>
-          <ion-row>
-            <ion-col center text-center>
-              <button>
-                <ion-icon name="remove-circle" (click)="decrement()"></ion-icon>
-              </button>
-            </ion-col>
-            <ion-col center text-center>
-              <span class="number_item">{{currentNumber}}</span>
-            </ion-col>
-            <ion-col center text-center>
-              <button>
-                <ion-icon name="add-circle" (click)="increment()"></ion-icon>
-              </button>
-            </ion-col>
-          </ion-row>
-        </ion-footer>
-      </ion-card>
-      <ion-button
-        color="primary"
-        expand="block"
-        [disabled]=""
-        [routerLink]="['/home']"
-        >Confirmar pedido</ion-button
-      >
-      <ion-button
-        color="primary"
-        expand="block"
-        [disabled]=""
-        [routerLink]="['/cuenta']"
-        [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'block'}"
-        >Finalizar pedido</ion-button
-      >
-      <ion-button
-        color="danger"
-        expand="block"
-        [disabled]=""
-        [routerLink]="['/home']"
-        class=""
-        >Cancelar pedido</ion-button
-      >
+    <div *ngIf="menuActivated;else other_content" style="margin-left: 5.5rem">
+      <div style="height: 250px">
+        <ion-card
+          class="menu-item"
+          style="margin-bottom: 1rem"
+          *ngFor="let menuItem of menuItems;let i = index"
+        >
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="{{menuItem.imagen}}" />
+            </ion-avatar>
+            <ion-label>
+              <h3>{{menuItem.nombre}}</h3>
+              <p>{{menuItem.precio | currency : "EUR" : "symbol" }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-footer>
+            <ion-row>
+              <ion-col center text-center>
+                <button>
+                  <ion-icon
+                    name="remove-circle"
+                    (click)="decrement()"
+                  ></ion-icon>
+                </button>
+              </ion-col>
+              <ion-col center text-center>
+                <span class="number_item">{{currentNumber}}</span>
+              </ion-col>
+              <ion-col center text-center>
+                <button>
+                  <ion-icon name="add-circle" (click)="increment()"></ion-icon>
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-footer>
+        </ion-card>
+        <ion-button
+          color="primary"
+          expand="block"
+          [disabled]=""
+          [routerLink]="['/home']"
+          style="display: inline-block"
+          >Confirmar pedido</ion-button
+        >
+        <ion-button
+          color="primary"
+          expand="block"
+          [disabled]=""
+          [routerLink]="['/cuenta']"
+          [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
+          >Finalizar pedido</ion-button
+        >
+        <ion-button
+          color="danger"
+          expand="block"
+          [disabled]=""
+          [routerLink]="['/home']"
+          class=""
+          style="display: inline-block"
+          >Cancelar pedido</ion-button
+        >
+      </div>
     </div>
+    <ng-template #other_content>
+      <div style="height: 250px; margin-left: 5.5rem">
+        <ion-card
+          class="menu-item"
+          style="margin-bottom: 1rem"
+          *ngFor="let platoItem of platoItems;let i = index"
+        >
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="{{platoItem.imagen}}" />
+            </ion-avatar>
+            <ion-label>
+              <h3>{{platoItem.nombre}}</h3>
+              <p>{{platoItem.precio | currency : "EUR" : "symbol" }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-footer>
+            <ion-row>
+              <ion-col center text-center>
+                <button>
+                  <ion-icon
+                    name="remove-circle"
+                    (click)="decrement()"
+                  ></ion-icon>
+                </button>
+              </ion-col>
+              <ion-col center text-center>
+                <span class="number_item">{{currentNumber}}</span>
+              </ion-col>
+              <ion-col center text-center>
+                <button>
+                  <ion-icon name="add-circle" (click)="increment()"></ion-icon>
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-footer>
+        </ion-card>
+        <ion-button
+          color="primary"
+          expand="block"
+          [disabled]=""
+          [routerLink]="['/home']"
+          style="display: inline-block"
+          >Confirmar pedido</ion-button
+        >
+        <ion-button
+          color="primary"
+          expand="block"
+          [disabled]=""
+          [routerLink]="['/cuenta']"
+          [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
+          >Finalizar pedido</ion-button
+        >
+        <ion-button
+          color="danger"
+          expand="block"
+          [disabled]=""
+          [routerLink]="['/home']"
+          class=""
+          style="display: inline-block"
+          >Cancelar pedido</ion-button
+        >
+      </div>
+    </ng-template>
   </div>
 </ion-content>
 

@@ -41,14 +41,30 @@ ion-card {
     }
   }
 }
+.flex-center {
+  width: 16rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  .label {
+    font-weight: bold;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+}
 form {
   margin-top: 3rem;
+  label {
+    font-weight: bold;
+  }
   button {
     background-color: #32b768;
     padding: 0.5rem 1.5rem;
     margin-top: 2rem;
     float: right;
-    margin-right: 1rem;
     border-radius: 2px;
   }
   ion-input {

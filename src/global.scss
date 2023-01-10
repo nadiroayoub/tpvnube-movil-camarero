@@ -31,3 +31,24 @@
 @import "~@swimlane/ngx-datatable/assets/bootstrap.css";
 @import "~@swimlane/ngx-datatable/themes/material.scss";
 @import "~@swimlane/ngx-datatable/assets/icons.css"; */
+
+html {
+  font-size: 18px;
+}
+input {
+  font-size: 1rem;
+}
+h1 {
+  font-size: 1.2rem;
+}
+
+// hide scroll bar
+/* ion-content {
+  // overwrite inline styles
+  --offset-bottom: auto!important;
+  --overflow: hidden;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+} */

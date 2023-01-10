@@ -12,7 +12,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content style="text-align: center">
+<ion-content style="text-align: center" [scrollEvents]="true">
   <ion-card color="light">
     <div class="img-wrapper">
       <img
@@ -48,41 +48,49 @@
       <!-- </input> -->
     </div>
   </ion-card>
-  <form [formGroup]="formEmpleado" (ngSubmit)="updateEmpleado()">
-    <ion-item>
-      <ion-label>Nombre</ion-label>
-      <ion-input
-        type="text"
-        formControlName="nombre"
-        value="formEmpleado.get('nombre')"
-      ></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label>Apellidos</ion-label>
-      <ion-input
-        formControlName="apellidos"
-        value="formEmpleado.get('apellidos')"
-      ></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label>DNI</ion-label>
-      <ion-input
-        formControlName="dni"
-        value="formEmpleado.get('dni')"
-        disabled="true"
-      ></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label>Correo electronico</ion-label>
-      <ion-input
-        formControlName="email"
-        value="formEmpleado.get('email')"
-      ></ion-input>
-    </ion-item>
-    <button ion-button type="submit" [disabled]="!formEmpleado.valid">
-      Guardar
-    </button>
-  </form>
+  <div class="flex-center">
+    <form [formGroup]="formEmpleado" (ngSubmit)="updateEmpleado()">
+      <ion-item>
+        <ion-label position="floating" class="label">Nombre</ion-label>
+        <ion-input
+          type="text"
+          formControlName="nombre"
+          value="formEmpleado.get('nombre')"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" class="label">Apellidos</ion-label>
+        <ion-input
+          formControlName="apellidos"
+          value="formEmpleado.get('apellidos')"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" class="label">DNI</ion-label>
+        <ion-input
+          formControlName="dni"
+          value="formEmpleado.get('dni')"
+          disabled="true"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" class="label"
+          >Correo electronico</ion-label
+        >
+        <ion-input formControlName="email" value="xx"></ion-input>
+      </ion-item>
+      <div class="button-container">
+        <button
+          style="color: white"
+          ion-button
+          type="submit"
+          [disabled]="!formEmpleado.valid"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
 </ion-content>
 
 <ion-footer>
