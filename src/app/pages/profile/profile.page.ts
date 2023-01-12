@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { NavController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@awesome-cordova-plugins/camera/ngx';
 import { AuthService } from '../../services/auth/auth.service';
-import { HttpClient } from '@angular/common/http';
 import { EmpleadoService } from '../../services/apiEmpleado/empleado.service';
-import { Usuario } from 'src/app/interfaces/interfaces';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-
+import { DomSanitizer } from '@angular/platform-browser';
+declare let cordova: any;
 
 @Component({
   selector: 'app-profile',
@@ -17,11 +15,12 @@ import { Router } from '@angular/router';
 })
 export class ProfilePage implements OnInit {
   formEmpleado: FormGroup;
+
   base64Image;
   usuario;
   selectedFile: File = null;
-  profileImgUrl: any;
-  imageUploaded: File = null;
+  profileImgUrl: any = '';
+  profileImgUrlSendedToServer: File = null;
   nifNieRegex = /^[XYZ]?\d{5,8}[A-Z]$/;
   emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   constructor(
@@ -29,7 +28,9 @@ export class ProfilePage implements OnInit {
     private camera: Camera,
     private authService: AuthService,
     private empleadoService: EmpleadoService,
-    private router: Router
+    private router: Router,
+    private toastController: ToastController,
+    public sanitizer: DomSanitizer
   ) {
     this.formEmpleado = this.formBuilder.group({
       nombre: ['', Validators.required],
@@ -40,42 +41,55 @@ export class ProfilePage implements OnInit {
       telefono: [''],
     });
   }
+  async ngOnInit() {
+    const usuario = await this.getUsuario();
+  }
+
   updateEmpleado() {
-    // const filedata = new FormData();
-    // filedata.append('image', this.imageUploaded, this.imageUploaded.name);
-    // this.formEmpleado.get('foto').setValue(this.imageUploaded.name);
-    // console.log(this.formEmpleado.get('pass')?.value);
-    // this.usuario.Id, this.imageUploaded, this.duenyoForm.get('pass')?.value;
-    // this.formEmpleado.controls['foto'].setValue(this.selectedFile.name);
     const data = this.formEmpleado.value;
     this.empleadoService
       .updateWithoutPassword('idEmpleado', this.usuario.Id, data)
       .subscribe({
         next: (res) => {
           this.empleadoService
-            .UpladImage(this.usuario.Id, this.imageUploaded, this.usuario.Pass)
-            .subscribe((res) => {
-              Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: '¡Empleado editado!',
-                showConfirmButton: false,
-                timer: 3500,
-              });
-              return res;
+            .UpladImage(this.usuario.Id, this.profileImgUrlSendedToServer)
+            .subscribe({
+              next: (res) => {
+                this.presentToast(
+                  '¡Empleado editado!',
+                  'bottom',
+                  'success',
+                  'checkmark'
+                ).then((toast) => {
+                  toast.present();
+                });
+                return res;
+              },
+              error: () => {
+                this.presentToast(
+                  '¡Empleado no editado!',
+                  'bottom',
+                  'danger',
+                  'close'
+                ).then((toast) => {
+                  toast.present();
+                });
+              },
             });
-          this.logout();
-          this.formEmpleado.reset();
         },
         error: () => {
-          alert('Error al momento de editar un Dueño');
+          this.presentToast(
+            '¡Empleado no editado!',
+            'bottom',
+            'danger',
+            'close'
+          ).then((toast) => {
+            toast.present();
+          });
         },
       });
   }
 
-  async ngOnInit() {
-    const usuario = await this.getUsuario();
-  }
   // Get usuario
   async getUsuario() {
     setTimeout(() => {
@@ -104,6 +118,7 @@ export class ProfilePage implements OnInit {
       foto: [this.usuario.Foto],
       telefono: [this.usuario.Telefono],
     });
+    this.createProfileImage();
   }
   openGallery() {
     const options: CameraOptions = {
@@ -121,40 +136,66 @@ export class ProfilePage implements OnInit {
       (err) => {}
     );
   }
-  guardar() {
-    const filedata = new FormData();
-    filedata.append('image', this.imageUploaded, this.imageUploaded.name);
-    this.formEmpleado.get('foto').setValue(this.imageUploaded.name);
-    console.log(this.imageUploaded.name);
-    console.log(this.formEmpleado);
 
-    // this.formEmpleado.controls['foto'].setValue(this.selectedFile.name);
-    // this.empleadoService.update('idEmpleado', this.usuario.Id, ).subscribe({
-    //   next: (res) => {
-    //     console.log('Empleado modificado');
-    //     this.empleadoForm.reset();
-    //     this.dialogRef.close('Editar');
-    //   },
-    //   error: () => {
-    //     alert('Error al momento de editar un nuevo Empleado');
-    //   },
-    // });
-  }
   // show image when we upload it
   // profile image
   onSelectFile(e: any): any {
     if (e.target.files) {
       var reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
-      this.imageUploaded = e.target.files[0];
+      this.profileImgUrlSendedToServer = e.target.files[0];
+      console.log(this.profileImgUrlSendedToServer);
       reader.onload = (event: any) => {
         this.formEmpleado.controls['foto'].setValue(' ');
-        this.imageUploaded = event.target.result;
+        this.profileImgUrl = event.target.result;
       };
     }
   }
   logout() {
     this.router.navigateByUrl('/auth');
     this.authService.logout();
+  }
+
+  createProfileImage() {
+    var filename = this.usuario.Foto.split('/').pop();
+    // filename = filename + this.get_url_extension(filename);
+    if (this.usuario.Foto != '') {
+      this.profileImgUrl = 'assets/images/EmpleadoImages/' + filename;
+    } else {
+      this.profileImgUrl = '';
+    }
+  }
+  get_url_extension(url) {
+    return url.split(/[#?]/)[0].split('.').pop().trim();
+  }
+
+  loadingImage(imageType: string) {
+    const byteString = window.atob(
+      this.authService.imageByte != null
+        ? this.authService.imageByte.toString()
+        : ''
+    );
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      int8Array[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([int8Array], { type: imageType });
+    return blob;
+  }
+  // toast message
+  async presentToast(
+    message: string,
+    position: 'top' | 'middle' | 'bottom',
+    estado: 'success' | 'danger',
+    icon: 'checkmark' | 'close'
+  ) {
+    const toast = await this.toastController.create({
+      message: `<ion-icon name="${icon}-circle-outline"></ion-icon> ${message}`,
+      duration: 1500,
+      position: position,
+      color: estado,
+    });
+    return toast;
   }
 }

@@ -17,18 +17,18 @@
     <div class="img-wrapper">
       <img
         [src]="
-            (imageUploaded == null)
-              ? 'assets/images/profile-placeholder.png'
-              : imageUploaded
+            profileImgUrl == ''
+            ? 'assets/images/profile-placeholder.png'
+            : profileImgUrl
           "
       />
       <link
         href="https://cdnjs.cloudflare.com/ajax/libs/ratchet/2.0.2/css/ratchet.css"
         rel="stylesheet"
       />
-      <label for="imageUpload" class="btn btn-primary btn-block btn-outlined"
-        >Seleccionar imagenes</label
-      >
+      <label for="imageUpload" class="camera-icon">
+        <ion-icon name="camera-outline"></ion-icon>
+      </label>
       <input
         type="file"
         accept="image/*"
@@ -36,16 +36,6 @@
         style="display: none"
         (change)="onSelectFile($event)"
       />
-      <!-- <ion-button color="light">
-          <ion-icon
-          slot="icon-only"
-          name="camera-outline"
-          color="medium"
-          (click)="openGallery()"
-          >
-        </ion-icon>
-      </ion-button> -->
-      <!-- </input> -->
     </div>
   </ion-card>
   <div class="flex-center">
@@ -77,7 +67,12 @@
         <ion-label position="floating" class="label"
           >Correo electronico</ion-label
         >
-        <ion-input formControlName="email" value="xx"></ion-input>
+        <ion-input
+          class="ion-no-margin"
+          style="margin-bottom: 0"
+          formControlName="email"
+          value="formEmpleado.get('email')"
+        ></ion-input>
       </ion-item>
       <div class="button-container">
         <button

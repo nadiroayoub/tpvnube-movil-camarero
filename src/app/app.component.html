@@ -8,17 +8,22 @@
             <ion-avatar slot="start">
               <img
                 [src]="
-                  (imageByte == null)
+                  imageByte == null
                     ? 'assets/images/profile-placeholder.png'
                     : profileImgUrl?.url
                 "
               />
             </ion-avatar>
             <ion-label>
-              <h3>
+              <h3 style="margin: 0">
                 {{ usuario?.Nombre + " " + usuario?.Apellidos }}
               </h3>
-              <p>Empleado</p>
+              <p style="margin: 0;font-size: 14px;">
+                <ion-icon name="pin"></ion-icon> {{ usuario?.Negocio.Nombre }}
+              </p>
+              <p style="font-size: 12px">
+                <ion-icon name="person"></ion-icon> Empleado
+              </p>
             </ion-label>
           </ion-item>
           <ion-footer> </ion-footer>

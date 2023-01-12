@@ -26,7 +26,7 @@ export class EmpleadoService extends ApiService<Empleado> {
       .get(`${endpoint}?id=${id}&imageName=${imageName}`)
       .pipe(catchError(this.handleError));
   }
-  UpladImage(id: string, fileToUpload: any, password: string): any {
+  UpladImage(id: string, fileToUpload: any): any {
     // headers
     var header = {
       headers: new HttpHeaders().set(
@@ -39,21 +39,21 @@ export class EmpleadoService extends ApiService<Empleado> {
     var endpoint = `${this.apiUrl}/UploadImage`;
 
     const formdata = new FormData();
-    const read = new FileReader();
-    read.onload = () => {
-      const blob = new Blob([read.result], {
-        type: fileToUpload.type,
-      });
-      formdata.append('file', blob, fileToUpload.name);
-      return this.httpClient
-        .post(`${endpoint}?p_oid=${id}&p_pass=${password}`, formdata, header)
-        .pipe(
-          catchError((err) => {
-            console.log('Upload error', err);
-            return err;
-          })
-        );
-    };
+    // const read = new FileReader();
+    // read.onload = () => {
+    // const blob = new Blob([read.result], {
+    //   type: fileToUpload.type,
+    // });
+    formdata.append('file', fileToUpload, fileToUpload.name);
+    return this.httpClient
+      .post(`${endpoint}?p_oid=${id}`, formdata, header)
+      .pipe(
+        catchError((err) => {
+          console.log('Upload error', err);
+          return err;
+        })
+      );
+    // };
   }
 
   // Endpoint: Modify without password

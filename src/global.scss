@@ -42,13 +42,21 @@ h1 {
   font-size: 1.2rem;
 }
 
-// hide scroll bar
-/* ion-content {
-  // overwrite inline styles
-  --offset-bottom: auto!important;
-  --overflow: hidden;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-} */
+select,
+textarea,
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="color"] {
+  margin-bottom: 0!important;
+}
