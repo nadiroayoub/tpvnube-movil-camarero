@@ -14,9 +14,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class AppComponent implements OnInit {
   usuario;
-  profileImgUrl: any;
   imageByte: any;
   imageUploaded = '';
+  profileImgUrl: any = '';
+
   constructor(
     private menu: MenuController,
     private _router: Router,
@@ -30,12 +31,11 @@ export class AppComponent implements OnInit {
         setTimeout(() => {
           this._authService.usuario.subscribe((res) => {
             this.usuario = res;
+            this.createProfileImage();
           });
-          this.createProfileImage();
         }, 2000);
       }
     });
-    console.log(this.usuario);
   }
 
   goTo(route: string) {
@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
   openEnd() {
     this.menu.close();
   }
-  // profile image
+  //#region upload image
   onSelectFile(e: any, usuario: Usuario): any {
     if (e.target.files) {
       var reader = new FileReader();
@@ -57,24 +57,15 @@ export class AppComponent implements OnInit {
     }
   }
   createProfileImage() {
-    this.imageByte = this._authService.imageByte;
-    const imageBlob = this.loadingImage(
-      this._authService.imageByte != null
-        ? this._authService.imageByte.toString()
-        : ''
-    );
-    var fileName = this.usuario.Foto.split('/').pop()!;
-    const imageFile = new File(
-      [imageBlob],
-      fileName.substring(0, fileName.lastIndexOf('.'))
-    );
-    const finalFileHandle = {
-      file: imageFile,
-      url: this.sanitizer.bypassSecurityTrustUrl(
-        window.URL.createObjectURL(imageFile)
-      ),
-    };
-    this.profileImgUrl = finalFileHandle;
+    var filename = this.usuario.Foto.split('/').pop();
+    if (this.usuario.Foto != '') {
+      this.profileImgUrl = 'assets/images/EmpleadoImages/' + filename;
+    } else {
+      this.profileImgUrl = '';
+    }
+  }
+  get_url_extension(url) {
+    return url.split(/[#?]/)[0].split('.').pop().trim();
   }
   loadingImage(imageType: string) {
     const byteString = window.atob(
@@ -90,4 +81,5 @@ export class AppComponent implements OnInit {
     const blob = new Blob([int8Array], { type: imageType });
     return blob;
   }
+  //#endregion
 }

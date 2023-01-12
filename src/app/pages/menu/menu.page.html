@@ -31,23 +31,29 @@
         </ion-avatar>
         <ion-label
           [ngStyle]="{'color': (category.active===true) ? '#57ae51' : '#000'}"
+          class="category-title"
           >{{category.nombre}}</ion-label
         >
       </ion-item>
     </div>
     <div *ngIf="menuActivated;else other_content" style="margin-left: 5.5rem">
       <div style="height: 250px">
+        <h4 style="width: 100%; text-align: center">Menus</h4>
         <ion-card
           class="menu-item"
           style="margin-bottom: 1rem"
           *ngFor="let menuItem of menuItems;let i = index"
+          menuImagenes
+          ngClass="menu-card"
         >
           <ion-item>
             <ion-avatar slot="start">
-              <img src="{{menuItem.imagen}}" />
+              <img
+                [src]=" menuImagenes[i] == '' ? 'assets/images/no_image_available.png' : menuImagenes[i]"
+              />
             </ion-avatar>
             <ion-label>
-              <h3>{{menuItem.nombre}}</h3>
+              <h5>{{menuItem.nombre}}</h5>
               <p>{{menuItem.precio | currency : "EUR" : "symbol" }}</p>
             </ion-label>
           </ion-item>
@@ -57,16 +63,19 @@
                 <button>
                   <ion-icon
                     name="remove-circle"
-                    (click)="decrement()"
+                    (click)="decrementPedido(menuItem)"
                   ></ion-icon>
                 </button>
               </ion-col>
               <ion-col center text-center>
-                <span class="number_item">{{currentNumber}}</span>
+                <span class="number_item">{{menuItem.numeroDePedido}}</span>
               </ion-col>
               <ion-col center text-center>
                 <button>
-                  <ion-icon name="add-circle" (click)="increment()"></ion-icon>
+                  <ion-icon
+                    name="add-circle"
+                    (click)="incrementPedido(menuItem)"
+                  ></ion-icon>
                 </button>
               </ion-col>
             </ion-row>
@@ -75,9 +84,8 @@
         <ion-button
           color="primary"
           expand="block"
-          [disabled]=""
-          [routerLink]="['/home']"
           style="display: inline-block"
+          (click)="confirmarPedido()"
           >Confirmar pedido</ion-button
         >
         <ion-button
@@ -101,17 +109,21 @@
     </div>
     <ng-template #other_content>
       <div style="height: 250px; margin-left: 5.5rem">
+        <h4 style="width: 100%; text-align: center">Platos</h4>
         <ion-card
           class="menu-item"
           style="margin-bottom: 1rem"
           *ngFor="let platoItem of platoItems;let i = index"
+          class="plato-card"
         >
           <ion-item>
             <ion-avatar slot="start">
-              <img src="{{platoItem.imagen}}" />
+              <img
+                [src]=" platoImagenes[i] == '' ? 'assets/images/no_image_available.png' : platoImagenes[i]"
+              />
             </ion-avatar>
             <ion-label>
-              <h3>{{platoItem.nombre}}</h3>
+              <h6>{{platoItem.nombre}}</h6>
               <p>{{platoItem.precio | currency : "EUR" : "symbol" }}</p>
             </ion-label>
           </ion-item>
@@ -121,16 +133,19 @@
                 <button>
                   <ion-icon
                     name="remove-circle"
-                    (click)="decrement()"
+                    (click)="decrementPedido(platoItem)"
                   ></ion-icon>
                 </button>
               </ion-col>
               <ion-col center text-center>
-                <span class="number_item">{{currentNumber}}</span>
+                <span class="number_item">{{platoItem.numeroDePedido}}</span>
               </ion-col>
               <ion-col center text-center>
                 <button>
-                  <ion-icon name="add-circle" (click)="increment()"></ion-icon>
+                  <ion-icon
+                    name="add-circle"
+                    (click)="incrementPedido(platoItem)"
+                  ></ion-icon>
                 </button>
               </ion-col>
             </ion-row>
@@ -140,8 +155,8 @@
           color="primary"
           expand="block"
           [disabled]=""
-          [routerLink]="['/home']"
           style="display: inline-block"
+          (click)="confirmarPedido()"
           >Confirmar pedido</ion-button
         >
         <ion-button

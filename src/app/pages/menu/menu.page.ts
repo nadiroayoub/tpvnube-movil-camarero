@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Menu } from 'src/app/model/Menu';
@@ -21,12 +21,15 @@ export class MenuPage implements OnInit {
   currentNumber = 0;
   dataComing;
   menuActivated = true;
+  menuImagenes: any[] = [];
+  platoImagenes: any[] = [];
   usuario;
   constructor(
     public activatedRoute: ActivatedRoute,
     private apiMenuService: ApiMenuService,
     private apiPlatoService: ApiPlatoService,
-    private apiAuthService: AuthService
+    private apiAuthService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -35,7 +38,8 @@ export class MenuPage implements OnInit {
     });
     this.dataComing = this.activatedRoute.snapshot.params.data;
     this.dataComing = JSON.parse(this.dataComing);
-    console.log(this.dataComing.Estado);
+    console.log(this.dataComing);
+    console.log(this.usuario);
     this.categoriesMenu = [
       {
         nombre: 'Menus',
@@ -53,15 +57,17 @@ export class MenuPage implements OnInit {
   }
   //#region Menu API
   getMenus() {
-    console.log('get menus');
     this.apiMenuService.getList().subscribe((menus: Menu[]) => {
       menus.forEach((menu) => {
-        if (menu.NegocioMenu.Id == this.usuario.Negocio.Id){
+        if (menu.NegocioMenu.Id == this.usuario.Negocio.Id) {
           var menuItem = {
+            id: menu.Id,
             nombre: menu.Nombre,
             precio: menu.Precio,
             imagen: menu.Foto,
+            numeroDePedido: 0,
           };
+          this.menuImagenes.push(this.convertUrl(menu.Foto, 'MenusImages'));
           this.menuItems.push(menuItem);
         }
       });
@@ -72,25 +78,28 @@ export class MenuPage implements OnInit {
   getPlatos() {
     this.apiPlatoService.getList().subscribe((platos) => {
       platos.forEach((plato) => {
-        if (plato.NegocioPlato.Id == this.usuario.Negocio.Id){
+        if (plato.NegocioPlato.Id == this.usuario.Negocio.Id) {
           var platoItem = {
+            id: plato.Id,
             nombre: plato.Nombre,
             precio: plato.Precio,
             imagen: plato.Foto,
+            numeroDePedido: 0,
           };
+          this.platoImagenes.push(this.convertUrl(plato.Foto, 'PlatosImages'));
           this.platoItems.push(platoItem);
         }
       });
     });
   }
   //#endregion
-  increment() {
-    this.currentNumber++;
+  incrementPedido(item: any) {
+    item.numeroDePedido++;
   }
 
-  decrement() {
-    if (this.currentNumber > 0) {
-      this.currentNumber--;
+  decrementPedido(item: any) {
+    if (item.numeroDePedido > 0) {
+      item.numeroDePedido--;
     }
   }
   activeCatogory(index: number) {
@@ -109,4 +118,30 @@ export class MenuPage implements OnInit {
       console.log(this.menuActivated);
     }
   }
+
+  //#region load menu and plato images
+  convertUrl(absoluteUtlFoto: string, ruta: string) {
+    var filename = absoluteUtlFoto.split('/').pop();
+    var relativeImgUrl;
+    if (absoluteUtlFoto != '') {
+      relativeImgUrl = 'assets/images/' + ruta + '/' + filename;
+    } else {
+      relativeImgUrl = '';
+    }
+    return relativeImgUrl;
+  }
+
+  //#endregion
+
+  //#region
+  confirmarPedido() {
+    console.log(this.menuItems);
+    console.log(this.platoItems);
+    //create commanda (passing comandaEstado, mesa, empleado)
+    // cerate nuevalineaMenu (passing comanda, cantidad, menu)
+    // cerate nuevalineaPlato (passing comanda, cantidad, plato)
+    // go back to home page
+    this.router.navigate(['/home']);
+  }
+  //#endregion
 }

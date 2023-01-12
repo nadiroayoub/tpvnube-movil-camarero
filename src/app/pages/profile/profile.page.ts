@@ -156,19 +156,15 @@ export class ProfilePage implements OnInit {
     this.authService.logout();
   }
 
+  //#region upload image
   createProfileImage() {
     var filename = this.usuario.Foto.split('/').pop();
-    // filename = filename + this.get_url_extension(filename);
     if (this.usuario.Foto != '') {
       this.profileImgUrl = 'assets/images/EmpleadoImages/' + filename;
     } else {
       this.profileImgUrl = '';
     }
   }
-  get_url_extension(url) {
-    return url.split(/[#?]/)[0].split('.').pop().trim();
-  }
-
   loadingImage(imageType: string) {
     const byteString = window.atob(
       this.authService.imageByte != null
@@ -183,6 +179,7 @@ export class ProfilePage implements OnInit {
     const blob = new Blob([int8Array], { type: imageType });
     return blob;
   }
+  //#endregion
   // toast message
   async presentToast(
     message: string,
