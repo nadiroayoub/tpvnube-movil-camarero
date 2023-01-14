@@ -7,7 +7,7 @@ import { ApiCobroService } from '../../services/apiCobro/api-cobro.service';
 import { ApiAuthService } from 'src/app/services/apiAuth/auth.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { Subscription } from 'rxjs';
-import { ApiPedidoService } from '../../services/apiPedido/api-pedido.service';
+import { ApiComandaService } from 'src/app/services/apiComanda/api-Comanda.service';
 
 export interface Data {
   movies: string;
@@ -38,7 +38,7 @@ export class CobrosPage implements OnInit {
     private http: HttpClient,
     private apiCobroService: ApiCobroService,
     private apiAuthService: AuthService,
-    private apiPedidoService: ApiPedidoService
+    private apiComandaService: ApiComandaService
   ) {}
   ngOnInit(): void {
     // this.dataSource.sort = this.sort;
@@ -51,13 +51,13 @@ export class CobrosPage implements OnInit {
         this.apiCobroService
           .getAllCobroOfEmpleado(this.usuario.Id)
           .subscribe((cobros) => {
-            // get pedido of cobro
+            // get Comanda of cobro
             cobros.forEach((cobro) => {
-              this.apiPedidoService
-                .getPedidoOfCobro(cobro.Id)
-                .subscribe((pedido) => {
+              this.apiComandaService
+                .getComandaOfCobro(cobro.Id)
+                .subscribe((Comanda) => {
                   this.dataSourceFromService.push({
-                    mesa: pedido.MesaComanda.Numero,
+                    mesa: Comanda.MesaComanda.Numero,
                     fecha: cobro.Fecha,
                     importe: cobro.Monto,
                   });

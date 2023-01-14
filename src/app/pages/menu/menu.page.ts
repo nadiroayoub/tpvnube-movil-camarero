@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Menu } from 'src/app/model/Menu';
-import { ApiAuthService } from 'src/app/services/apiAuth/auth.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ApiMenuService } from '../../services/apiMenu/api-menu.service';
+import { MesaService } from '../../services/apiMesa/mesa.service';
 import { ApiPlatoService } from '../../services/apiPlato/api-plato.service';
+import { PostComanda } from 'src/app/model/Comanda';
+import { Estado, Mesa } from 'src/app/model/Mesa';
+import { ApiLineaComandaService } from '../../services/apiLineaComanda/api-linea-Comanda.service';
+import { PostLineaComanda } from '../../model/LineaComanda';
+import { ApiComandaService } from 'src/app/services/apiComanda/api-Comanda.service';
+import { Observable } from 'rxjs';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-menu',
@@ -15,11 +20,23 @@ import { ApiPlatoService } from '../../services/apiPlato/api-plato.service';
 })
 export class MenuPage implements OnInit {
   categoriesMenu: { nombre: string; imagen: string; active: boolean }[];
-  menuItems: { nombre: string; precio: number; imagen: string }[] = [];
-  platoItems: { nombre: string; precio: number; imagen: string }[] = [];
+  menuItems: {
+    id: number;
+    nombre: string;
+    precio: number;
+    imagen: string;
+    numeroDeComanda: number;
+  }[] = [];
+  platoItems: {
+    id: number;
+    nombre: string;
+    precio: number;
+    imagen: string;
+    numeroDeComanda: number;
+  }[] = [];
   public active: number[] = [];
   currentNumber = 0;
-  dataComing;
+  dataComing: Mesa;
   menuActivated = true;
   menuImagenes: any[] = [];
   platoImagenes: any[] = [];
@@ -29,15 +46,18 @@ export class MenuPage implements OnInit {
     private apiMenuService: ApiMenuService,
     private apiPlatoService: ApiPlatoService,
     private apiAuthService: AuthService,
-    private router: Router
+    private router: Router,
+    private apiComandaService: ApiComandaService,
+    private apiLineaComandaService: ApiLineaComandaService,
+    private apiMesaService: MesaService,
+    private toastController: ToastController
   ) {}
 
   ngOnInit() {
     this.apiAuthService.usuario.subscribe((usuario) => {
       this.usuario = usuario;
     });
-    this.dataComing = this.activatedRoute.snapshot.params.data;
-    this.dataComing = JSON.parse(this.dataComing);
+    this.dataComing = JSON.parse(this.activatedRoute.snapshot.params.data);
     console.log(this.dataComing);
     console.log(this.usuario);
     this.categoriesMenu = [
@@ -65,7 +85,7 @@ export class MenuPage implements OnInit {
             nombre: menu.Nombre,
             precio: menu.Precio,
             imagen: menu.Foto,
-            numeroDePedido: 0,
+            numeroDeComanda: 0,
           };
           this.menuImagenes.push(this.convertUrl(menu.Foto, 'MenusImages'));
           this.menuItems.push(menuItem);
@@ -84,7 +104,7 @@ export class MenuPage implements OnInit {
             nombre: plato.Nombre,
             precio: plato.Precio,
             imagen: plato.Foto,
-            numeroDePedido: 0,
+            numeroDeComanda: 0,
           };
           this.platoImagenes.push(this.convertUrl(plato.Foto, 'PlatosImages'));
           this.platoItems.push(platoItem);
@@ -94,12 +114,12 @@ export class MenuPage implements OnInit {
   }
   //#endregion
   incrementPedido(item: any) {
-    item.numeroDePedido++;
+    item.numeroDeComanda++;
   }
 
   decrementPedido(item: any) {
-    if (item.numeroDePedido > 0) {
-      item.numeroDePedido--;
+    if (item.numeroDeComanda > 0) {
+      item.numeroDeComanda--;
     }
   }
   activeCatogory(index: number) {
@@ -134,14 +154,114 @@ export class MenuPage implements OnInit {
   //#endregion
 
   //#region
-  confirmarPedido() {
+  confirmarComanda() {
     console.log(this.menuItems);
     console.log(this.platoItems);
-    //create commanda (passing comandaEstado, mesa, empleado)
-    // cerate nuevalineaMenu (passing comanda, cantidad, menu)
-    // cerate nuevalineaPlato (passing comanda, cantidad, plato)
-    // go back to home page
-    this.router.navigate(['/home']);
+    //create commanda passing (comandaEstado, mesa, empleado)
+    var postComanda: PostComanda = {
+      EstadoComanda: 1,
+      Mesa_oid: this.dataComing.Id,
+      Empleado_oid: 1,
+    };
+    this.apiComandaService
+      .addPostComandaSpecific(postComanda)
+      .subscribe((idComanda) => {
+        // create nuevalineaMenu (passing comanda, cantidad, menu)
+        this.menuItems.forEach((menu) => {
+          var lineaComanda: PostLineaComanda = {
+            Id: idComanda,
+            Cantidad: menu.numeroDeComanda,
+            Menu_oid: menu.id,
+            Plato_oid: 0,
+          };
+          var response = this.checkDuplicate(lineaComanda, 'menu');
+          if (response) {
+            console.log('Inside');
+            return;
+          }
+        });
+        // create nuevalineaPlato (passing comanda, cantidad, plato)
+        this.platoItems.forEach((plato) => {
+          var lineaComanda: PostLineaComanda = {
+            Id: idComanda,
+            Cantidad: plato.numeroDeComanda,
+            Menu_oid: 0,
+            Plato_oid: plato.id,
+          };
+          var response = this.checkDuplicate(lineaComanda, 'plato');
+          if (response) {
+            console.log('Inside');
+            return;
+          }
+        });
+        // modify status of mesa
+        this.dataComing.Estado = Estado.ocupado;
+        this.apiMesaService
+          .update('idMesa', this.dataComing.Id, this.dataComing)
+          .subscribe((res) => {
+            console.log('mesa editado' + res);
+            this.presentToast(
+              'Comanda creada',
+              'bottom',
+              'success',
+              'checkmark'
+            );
+          });
+        // go back to home page
+        this.router.navigate(['/home']);
+      });
+  }
+  finalizarComanda() {
+    // TODO: check if there menuItems and platoItems are empty
+    // TODO: change mesa status
+    // TODO: go to cobro page
+    // TODO: send data to cobro page
+  }
+  cancelarComanda() {
+    //TODO: clear out menuItems and platoItems
+    //TODO: go to home page
+  }
+  //#endregion
+
+  //#region await for subscribe methods
+  postLineaMenuData(lineaComanda, itemType): Observable<any> {
+    if ((itemType = 'plato')) {
+      return this.apiLineaComandaService.nuevaLineaPlato(lineaComanda);
+    } else {
+      return this.apiLineaComandaService.nuevaLineaMenu(lineaComanda);
+    }
+  }
+
+  async checkDuplicate(postLineaMenuData, itemType: 'plato' | 'menu') {
+    var response = await this.postLineaMenuData(
+      postLineaMenuData,
+      itemType
+    ).toPromise();
+    if (response) {
+      console.log('Inside');
+    }
+    return response;
+  }
+
+  async proceed(postLineaMenuData, itemType) {
+    await this.checkDuplicate(postLineaMenuData, itemType);
+    console.log('finished');
+  }
+  //#endregion
+  //#region Toast message
+  async presentToast(
+    message: string,
+    position: 'top' | 'middle' | 'bottom',
+    estado: 'success' | 'danger',
+    icon: 'checkmark' | 'close'
+  ) {
+    const toast = await this.toastController.create({
+      message: `<ion-icon name="${icon}-circle-outline"></ion-icon> ${message}`,
+      duration: 1500,
+      position: position,
+      color: estado,
+    });
+    return toast;
   }
   //#endregion
 }

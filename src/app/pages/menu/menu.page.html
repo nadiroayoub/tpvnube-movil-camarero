@@ -68,7 +68,7 @@
                 </button>
               </ion-col>
               <ion-col center text-center>
-                <span class="number_item">{{menuItem.numeroDePedido}}</span>
+                <span class="number_item">{{menuItem.numeroDeComanda}}</span>
               </ion-col>
               <ion-col center text-center>
                 <button>
@@ -92,7 +92,7 @@
           color="primary"
           expand="block"
           [disabled]=""
-          [routerLink]="['/cuenta']"
+          (click)="finalizarComanda()"
           [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
           >Finalizar pedido</ion-button
         >
@@ -102,6 +102,7 @@
           [disabled]=""
           [routerLink]="['/home']"
           class=""
+          (click)="cancelarComanda()"
           style="display: inline-block"
           >Cancelar pedido</ion-button
         >
@@ -138,7 +139,7 @@
                 </button>
               </ion-col>
               <ion-col center text-center>
-                <span class="number_item">{{platoItem.numeroDePedido}}</span>
+                <span class="number_item">{{platoItem.numeroDeComanda}}</span>
               </ion-col>
               <ion-col center text-center>
                 <button>
@@ -156,14 +157,14 @@
           expand="block"
           [disabled]=""
           style="display: inline-block"
-          (click)="confirmarPedido()"
+          (click)="confirmarComanda()"
           >Confirmar pedido</ion-button
         >
         <ion-button
           color="primary"
           expand="block"
           [disabled]=""
-          [routerLink]="['/cuenta']"
+          (click)="finalizarComanda()"
           [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
           >Finalizar pedido</ion-button
         >
@@ -173,6 +174,7 @@
           [disabled]=""
           [routerLink]="['/home']"
           class=""
+          (click)="cancelarComanda()"
           style="display: inline-block"
           >Cancelar pedido</ion-button
         >

@@ -1,5 +1,5 @@
 export interface Mesa {
-  Id: string;
+  Id: number;
   Estado: Estado;
   Numero: number;
 }
