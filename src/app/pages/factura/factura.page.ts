@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-factura',
@@ -8,14 +9,16 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 })
 export class FacturaPage implements OnInit {
   public todo: FormGroup;
-  constructor(private formBuilder: FormBuilder) {
+  nifNieRegex = /^[XYZ]?\d{5,8}[A-Z]$/;
+  emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  constructor(private formBuilder: FormBuilder, private router: Router) {
     this.todo = this.formBuilder.group({
-      nombreEmpresa: [''],
-      // Validators.required
-      cif: [''],
-      direccion: [''],
-      telefono: [''],
-      correoElectronico: [''],
+      nombre: [''],
+      dni: ['', [Validators.required, Validators.pattern(this.nifNieRegex)]],
+      apellidos: [''],
+      email: ['', [Validators.required, Validators.pattern(this.emailRegex)]],
+      numero: [Math.floor(100000 + Math.random() * 900000)],
+      descripcion: [''],
     });
   }
 
@@ -23,5 +26,10 @@ export class FacturaPage implements OnInit {
 
   logForm() {
     console.log(this.todo.value);
+  }
+
+  imprimirFactura() {
+    // TODO: await until factura loaded
+    this.router.navigate(['/home']);
   }
 }

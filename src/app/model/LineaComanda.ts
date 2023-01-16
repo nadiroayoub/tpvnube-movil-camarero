@@ -8,8 +8,14 @@ export interface LineaComanda {
   Menus: Menu;
 }
 export interface PostLineaComanda {
-  Id: number;
+  Comanda_oid: number;
   Cantidad: number;
   Menu_oid: number;
   Plato_oid: number;
 }
+// export interface CuentaLineaComanda {
+//   Id: number;
+//   Cantidad: number;
+//   PlatoOfLineaComanda: Plato;
+//   MenuOfLineaComanda: Menu;
+// }

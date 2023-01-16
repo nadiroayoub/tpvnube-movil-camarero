@@ -1,9 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title></ion-title>
+    <ion-title>Factura</ion-title>
     <ion-buttons slot="start">
-      <ion-menu-button menu="main-menu"></ion-menu-button>
+      <ion-back-button> </ion-back-button>
     </ion-buttons>
+    <!-- <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons> -->
     <ion-buttons slot="end">
       <ion-button [routerLink]="['/home']">
         <img src="assets/icon/blackLogo.png" alt="" width="40px" />
@@ -19,39 +22,46 @@
     offset-sm="2"
     style="display: flex; flex-flow: column; height: 100%"
   >
-    <ion-header>
-      <h5 class="title-page">Factura</h5>
-    </ion-header>
     <form [formGroup]="todo" (ngSubmit)="logForm()">
-      <ion-item>
-        <ion-label>Nombre de la empresa</ion-label>
-        <ion-input type="text" formControlName="nombreEmpresa"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>DNI / CIF</ion-label>
-        <ion-input formControlName="cif"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>Direccion</ion-label>
-        <ion-input formControlName="direccion"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>Telefono</ion-label>
-        <ion-input formControlName="telefono"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>Correo electronico</ion-label>
-        <ion-input formControlName="correoElectronico"></ion-input>
-      </ion-item>
-      <button ion-button type="submit" [disabled]="!todo.valid">Imprimir Factura</button>
+      <div class="datos-cliente" style="margin-top: 1rem">
+        <h4 style="margin-bottom: 0">Cliente</h4>
+        <ion-item>
+          <ion-label>DNI</ion-label>
+          <ion-input formControlName="dni"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Nombre</ion-label>
+          <ion-input type="text" formControlName="nombre"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Apellidos</ion-label>
+          <ion-input type="text" formControlName="apellidos"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Correo electronico</ion-label>
+          <ion-input formControlName="email"></ion-input>
+        </ion-item>
+      </div>
+      <div class="datos-factura" style="margin-top: 2rem">
+        <h4 style="margin-bottom: 0">Factura</h4>
+        <ion-item>
+          <ion-label>Numero de la factura</ion-label>
+          <ion-input disabled="true" type="text" formControlName="numero"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Descripcion</ion-label>
+          <ion-input formControlName="descripcion"></ion-input>
+        </ion-item>
+      </div>
+      <button
+        ion-button
+        type="submit"
+        [disabled]="!todo.valid"
+        (click)="imprimirFactura()"
+      >
+        Imprimir Factura
+      </button>
     </form>
-    <!-- <ion-row class="ion-align-self-center">
-      <ion-col>
-        <ion-button [disabled]="" expand="block" text-center
-          >Imprimir Factura</ion-button
-        >
-      </ion-col>
-    </ion-row> -->
   </ion-grid>
 </ion-content>
 

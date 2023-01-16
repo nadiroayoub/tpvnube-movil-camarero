@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Mesa } from 'src/app/model/Mesa';
@@ -22,43 +22,40 @@ export class HomePage implements OnInit {
     public router: Router,
     private navCtrl: NavController,
     private apiMesaService: MesaService,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute
+  ) {
+    activatedRoute.params.subscribe((val) => {
+      // put the code from `ngOnInit` here
+      this.mesas = [];
+      this.getMesas();
+    });
+  }
 
   ngOnInit() {
-    // this.updateUsuarioSubscription = interval(5000).subscribe(() => {
-    //   return this.authService.usuario.subscribe((response) => {
-    //     this.usuario = response;
-    //     console.log(this.usuario);
-    //   });
-    // });
     setTimeout(() => {
       this.authService.usuario.subscribe((res) => {
         this.usuario = res;
         console.log(this.usuario);
         this.getMesas();
       });
-    }, 500);
-    // setTimeout(() => {}, 1000);
+    }, 1000);
   }
   changed() {
     console.log(this.enteredSearchValue);
   }
   getMesas(): any {
     // get mesas from user service
-    this.usuario.Negocio.Mesas.forEach((mesa) => {
-      this.mesas.push(mesa);
+    //get all mesas filtring by user id
+    this.apiMesaService.getList().subscribe((mesas) => {
+      mesas.forEach((mesaAll) => {
+        this.usuario.Negocio.Mesas.forEach((mesa) => {
+          if (mesa.Id == mesaAll.Id) {
+            this.mesas.push(mesaAll);
+          }
+        });
+      });
     });
-    // this.apiMesaService.getList().subscribe({
-    //   next: (res) => {
-    //     res.forEach((mesa) => {
-    //       this.mesas.push(mesa);
-    //     });
-    //   },
-    //   error: (err) => {
-    //     alert('Error while fetching Mesas:/Mesa/ReadAll records!');
-    //   },
-    // });
   }
   navigateWithData(mesaNumber: number) {
     const fullname = 'asa';

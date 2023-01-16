@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Menu } from 'src/app/model/Menu';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ApiMenuService } from '../../services/apiMenu/api-menu.service';
@@ -12,6 +12,7 @@ import { PostLineaComanda } from '../../model/LineaComanda';
 import { ApiComandaService } from 'src/app/services/apiComanda/api-Comanda.service';
 import { Observable } from 'rxjs';
 import { ToastController } from '@ionic/angular';
+import { EstadoComanda } from '../../model/Comanda';
 
 @Component({
   selector: 'app-menu',
@@ -41,6 +42,8 @@ export class MenuPage implements OnInit {
   menuImagenes: any[] = [];
   platoImagenes: any[] = [];
   usuario;
+  comandaActiva: boolean = false;
+  comandaIncrementa: number = 0;
   constructor(
     public activatedRoute: ActivatedRoute,
     private apiMenuService: ApiMenuService,
@@ -114,12 +117,21 @@ export class MenuPage implements OnInit {
   }
   //#endregion
   incrementPedido(item: any) {
+    this.comandaIncrementa++;
     item.numeroDeComanda++;
+    this.comandaActiva = true;
+    if (this.comandaIncrementa == 0) {
+      this.comandaActiva = false;
+    }
   }
 
   decrementPedido(item: any) {
+    this.comandaIncrementa--;
     if (item.numeroDeComanda > 0) {
       item.numeroDeComanda--;
+    }
+    if (this.comandaIncrementa == 0) {
+      this.comandaActiva = false;
     }
   }
   activeCatogory(index: number) {
@@ -159,39 +171,43 @@ export class MenuPage implements OnInit {
     console.log(this.platoItems);
     //create commanda passing (comandaEstado, mesa, empleado)
     var postComanda: PostComanda = {
-      EstadoComanda: 1,
+      EstadoComanda: EstadoComanda.comanda,
       Mesa_oid: this.dataComing.Id,
-      Empleado_oid: 1,
+      Empleado_oid: this.usuario.Id,
     };
     this.apiComandaService
       .addPostComandaSpecific(postComanda)
-      .subscribe((idComanda) => {
+      .subscribe((comanda) => {
         // create nuevalineaMenu (passing comanda, cantidad, menu)
         this.menuItems.forEach((menu) => {
-          var lineaComanda: PostLineaComanda = {
-            Id: idComanda,
-            Cantidad: menu.numeroDeComanda,
-            Menu_oid: menu.id,
-            Plato_oid: 0,
-          };
-          var response = this.checkDuplicate(lineaComanda, 'menu');
-          if (response) {
-            console.log('Inside');
-            return;
+          if (menu.numeroDeComanda != 0) {
+            var lineaComanda: PostLineaComanda = {
+              Comanda_oid: comanda.Id,
+              Cantidad: menu.numeroDeComanda,
+              Menu_oid: menu.id,
+              Plato_oid: 0,
+            };
+            var response = this.checkDuplicate(lineaComanda, 'menu');
+            if (response) {
+              console.log('Inside');
+              return;
+            }
           }
         });
         // create nuevalineaPlato (passing comanda, cantidad, plato)
         this.platoItems.forEach((plato) => {
-          var lineaComanda: PostLineaComanda = {
-            Id: idComanda,
-            Cantidad: plato.numeroDeComanda,
-            Menu_oid: 0,
-            Plato_oid: plato.id,
-          };
-          var response = this.checkDuplicate(lineaComanda, 'plato');
-          if (response) {
-            console.log('Inside');
-            return;
+          if (plato.numeroDeComanda != 0) {
+            var lineaComanda: PostLineaComanda = {
+              Comanda_oid: comanda.Id,
+              Cantidad: plato.numeroDeComanda,
+              Menu_oid: 0,
+              Plato_oid: plato.id,
+            };
+            var response = this.checkDuplicate(lineaComanda, 'plato');
+            if (response) {
+              console.log('Inside');
+              return;
+            }
           }
         });
         // modify status of mesa
@@ -199,23 +215,40 @@ export class MenuPage implements OnInit {
         this.apiMesaService
           .update('idMesa', this.dataComing.Id, this.dataComing)
           .subscribe((res) => {
-            console.log('mesa editado' + res);
             this.presentToast(
               'Comanda creada',
               'bottom',
               'success',
               'checkmark'
-            );
+            ).then((toast) => {
+              toast.present();
+            });
+            // go back to home page
+            setTimeout(() => {
+              this.router.navigate(['/home']);
+            }, 1500);
           });
-        // go back to home page
-        this.router.navigate(['/home']);
       });
+    this.presentToast('Comanda creada', 'bottom', 'success', 'checkmark').then(
+      (toast) => {
+        toast.present();
+      }
+    );
   }
   finalizarComanda() {
     // TODO: check if there menuItems and platoItems are empty
-    // TODO: change mesa status
-    // TODO: go to cobro page
-    // TODO: send data to cobro page
+    if (this.comandaActiva == true) {
+      // this.confirmarComanda();
+      console.log('confirmarComanda');
+    } else {
+      // TODO: go to cuenta and send data (id of mesa)
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          mesa: JSON.stringify(this.dataComing),
+        },
+      };
+      this.router.navigate(['/cuenta'], navigationExtras);
+    }
   }
   cancelarComanda() {
     //TODO: clear out menuItems and platoItems
@@ -225,7 +258,7 @@ export class MenuPage implements OnInit {
 
   //#region await for subscribe methods
   postLineaMenuData(lineaComanda, itemType): Observable<any> {
-    if ((itemType = 'plato')) {
+    if (itemType == 'plato') {
       return this.apiLineaComandaService.nuevaLineaPlato(lineaComanda);
     } else {
       return this.apiLineaComandaService.nuevaLineaMenu(lineaComanda);

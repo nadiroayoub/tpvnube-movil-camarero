@@ -57,7 +57,7 @@ export class CobrosPage implements OnInit {
                 .getComandaOfCobro(cobro.Id)
                 .subscribe((Comanda) => {
                   this.dataSourceFromService.push({
-                    mesa: Comanda.MesaComanda.Numero,
+                    mesa: Comanda.MesaOfComanda.Numero,
                     fecha: cobro.Fecha,
                     importe: cobro.Monto,
                   });

@@ -50,6 +50,10 @@ ion-col {
       cursor: pointer;
     }
   }
+  &.imprimir {
+    width: 12rem;
+    margin: 0 auto;
+  }
 }
 .fixed-content {
   display: flex;
@@ -72,13 +76,7 @@ ion-col {
 .ion-align-self-center:last-child {
   width: 90%;
   border-radius: 0px 0px 50px 50px;
-  /* ion-button {
-    .button-native {
-      span {
-        justify-content: space-around !important;
-      }
-    }
-  } */
+  margin: 0 auto;
   ion-button::part(native) {
     span {
       --background-color: red;
@@ -89,7 +87,13 @@ ion-col {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+      background: #ccc;
+    }
   }
+  
 }
 
 .cobrar-button_textos {
@@ -98,3 +102,7 @@ ion-col {
   justify-content: space-around;
   align-items: center;
 }
+
+/* .goBottom{
+
+} */

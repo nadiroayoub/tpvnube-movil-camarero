@@ -13,6 +13,8 @@ import { AppStoreModule } from './store/AppStoreModule';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoadingComponent } from './components/loading/loading.component';
 import { AuthService } from './services/auth/auth.service';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   declarations: [AppComponent, LoadingComponent],
@@ -25,6 +27,7 @@ import { AuthService } from './services/auth/auth.service';
     HttpClientModule,
     Ng2SearchPipeModule,
     ...AppStoreModule,
+    PdfViewerModule,
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
   ],
   providers: [

@@ -56,7 +56,7 @@ export class ProfilePage implements OnInit {
             .subscribe({
               next: (res) => {
                 this.presentToast(
-                  '¡Empleado editado!',
+                  '¡Datos editados!',
                   'bottom',
                   'success',
                   'checkmark'
@@ -67,7 +67,7 @@ export class ProfilePage implements OnInit {
               },
               error: () => {
                 this.presentToast(
-                  '¡Empleado no editado!',
+                  '¡Error al editar los datos!',
                   'bottom',
                   'danger',
                   'close'
@@ -180,7 +180,7 @@ export class ProfilePage implements OnInit {
     return blob;
   }
   //#endregion
-  // toast message
+  //#region toast message
   async presentToast(
     message: string,
     position: 'top' | 'middle' | 'bottom',
@@ -195,4 +195,5 @@ export class ProfilePage implements OnInit {
     });
     return toast;
   }
+  //#endregion
 }

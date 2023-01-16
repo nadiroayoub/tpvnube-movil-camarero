@@ -1,7 +1,9 @@
 {
   "name": "TPVNubeCamarero",
   "integrations": {
-    "capacitor": {},
+    "capacitor": {
+      "enabled": false
+    },
     "cordova": {}
   },
   "type": "angular"
