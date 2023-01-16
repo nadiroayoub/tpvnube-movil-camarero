@@ -5,7 +5,7 @@ import { Mesa } from './Mesa';
 export interface Comanda {
   Id: number;
   Fecha: string;
-  EstadoPedido: EstadoComanda;
+  EstadoComanda: EstadoComanda;
   Total: number;
   Lineas: LineaComanda[];
   Factura: Factura;

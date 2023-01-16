@@ -10,6 +10,10 @@ import { Usuario } from 'src/app/interfaces/interfaces';
 import { ApiNegocioService } from 'src/app/services/apiNegocio/api-negocio.service';
 import { MesaService } from 'src/app/services/apiMesa/mesa.service';
 import { Estado } from 'src/app/model/Mesa';
+import { ApiClienteService } from '../../services/apiCliente/api-cliente.service';
+import { Cliente } from '../../model/Cliente';
+import { ApiFacturaService } from '../../services/apiFactura/api-factura.service';
+import { Factura } from 'src/app/model/Factura';
 
 @Component({
   selector: 'app-cuenta',
@@ -35,7 +39,9 @@ export class CuentaPage implements OnInit {
     private authService: AuthService,
     private apiNegocioService: ApiNegocioService,
     private toastController: ToastController,
-    private aApiMesaService: MesaService
+    private aApiMesaService: MesaService,
+    private apiClienteService: ApiClienteService,
+    private apiFacturaService: ApiFacturaService
   ) {}
 
   ngOnInit() {
@@ -50,6 +56,7 @@ export class CuentaPage implements OnInit {
     this.apiComandaService
       .getAllComandaOfMesa(262144)
       .subscribe((comandas: Comanda[]) => {
+        console.log(comandas);
         comandas.forEach((comanda) => {
           var comandaItems: CuentaComanda[] = [];
           comanda.AllLineaComandaOfComanda.forEach((lineaComanda: any) => {
@@ -79,7 +86,7 @@ export class CuentaPage implements OnInit {
                 ? lineaComanda.MenuOfLineaComanda.Precio
                 : lineaComanda.PlatoOfLineaComanda.Precio;
           });
-          this.listaComanda.push({ nombre: '', items: comandaItems });
+          this.listaComanda.push({ nombre: comanda.EstadoComanda, items: comandaItems });
         });
       });
   }
@@ -98,7 +105,7 @@ export class CuentaPage implements OnInit {
       .createCuenta(this.precioTotal, this.listaComanda)
       .subscribe((filename: string) => {
         //TODO: change mesa status
-        this.dataComingFromMenuPage.Estado = Estado.pendientePago;
+        // this.dataComingFromMenuPage.Estado = Estado.pendientePago;
         this.aApiMesaService
           .update(
             'idMesa',
@@ -160,6 +167,7 @@ export class CuentaPage implements OnInit {
           };
           this.apiCobroService.addPostCobroSpecific(cobro).subscribe({
             next: (res) => {
+              // TODO: modify commanda status after creating cobro 1--> 2
               this.presentToast(
                 '¡Cobro creado!',
                 'bottom',
@@ -214,7 +222,7 @@ export class CuentaPage implements OnInit {
   ) {
     const toast = await this.toastController.create({
       message: `<ion-icon name="${icon}-circle-outline"></ion-icon> ${message}`,
-      duration: 1500,
+      duration: 2000,
       position: position,
       color: estado,
     });

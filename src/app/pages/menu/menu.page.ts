@@ -44,6 +44,7 @@ export class MenuPage implements OnInit {
   usuario;
   comandaActiva: boolean = false;
   comandaIncrementa: number = 0;
+  mainTag: HTMLCollectionOf<HTMLElement>;
   constructor(
     public activatedRoute: ActivatedRoute,
     private apiMenuService: ApiMenuService,
@@ -61,8 +62,7 @@ export class MenuPage implements OnInit {
       this.usuario = usuario;
     });
     this.dataComing = JSON.parse(this.activatedRoute.snapshot.params.data);
-    console.log(this.dataComing);
-    console.log(this.usuario);
+    console.log(this.dataComing.Estado);
     this.categoriesMenu = [
       {
         nombre: 'Menus',

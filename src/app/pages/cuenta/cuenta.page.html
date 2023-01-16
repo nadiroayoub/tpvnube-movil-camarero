@@ -1,9 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title></ion-title>
     <ion-buttons slot="start">
       <ion-menu-button menu="main-menu"></ion-menu-button>
     </ion-buttons>
+    <ion-title style="text-align: center"
+      >Mesa {{this.dataComingFromMenuPage.Numero}}</ion-title
+    >
     <ion-buttons slot="end">
       <ion-button [routerLink]="['/home']">
         <img src="assets/icon/blackLogo.png" alt="" width="40px" />
@@ -22,17 +24,23 @@
     <div class="comandas" *ngFor="let comanda of listaComanda; let i = index">
       <h4
         (click)="hideMenuItems($event)"
-        style="margin-top: 1rem; cursor: pointer"
+        style="margin-top: 1rem; cursor: pointer; color: white"
+        [ngClass]="{'estadoComanda': comanda.nombre ==  1}"
+        ng-class="{estadoComanda : comanda.nombre ==  1, estadoPreparada : comanda.nombre == 2, estadoRechazada : comanda.nombre == 3}"
       >
         Comanda {{i+1}}
-        <ion-icon
+        <span style="font-size: 10px"
+          >Estado: {{comanda.nombre == 1 ? "comanda":(comanda.nombre ==2 ?
+          'preparada': 'rechazada')}}</span
+        >
+        <!-- <ion-icon
           name="arrow-up-outline"
           [ngStyle]="{'display': showComanda ? 'none' : 'inline-block'}"
-        ></ion-icon>
-        <ion-icon
+        ></ion-icon> -->
+        <!-- <ion-icon
           name="arrow-down-outline"
           [ngStyle]="{'display': !showComanda ? 'none' : 'inline-block'}"
-        ></ion-icon>
+        ></ion-icon> -->
       </h4>
       <ion-card *ngFor="let menuItem of comanda.items;let i = index;">
         <ion-item style="height: 3, 5rem">
@@ -54,7 +62,7 @@
     </div>
     <div class="fixed-container">
       <ion-row class="ion-align-self-center imprimir">
-        <ion-col>
+        <ion-col class="ion-align-self-center-col">
           <button
             class="active imprimirCuenta"
             ion-button
@@ -62,10 +70,10 @@
             full
             (click)="openCuenta()"
           >
-            Imprimir cuenta
+            Ticket
           </button>
         </ion-col>
-        <ion-col>
+        <ion-col class="ion-align-self-center-col">
           <button
             ion-button
             text-center
@@ -74,7 +82,7 @@
             [ngClass]="{'active-factura': cobroHecho === true}"
             (click)="openFactura()"
           >
-            Imprimir factura
+            Factura
           </button>
         </ion-col>
       </ion-row>

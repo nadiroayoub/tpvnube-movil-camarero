@@ -37,147 +37,168 @@
       </ion-item>
     </div>
     <div *ngIf="menuActivated;else other_content" style="margin-left: 5.5rem">
-      <div style="height: 250px">
-        <h4 style="width: 100%; text-align: center">Menus</h4>
-        <ion-card
-          class="menu-item"
-          style="margin-bottom: 1rem"
-          *ngFor="let menuItem of menuItems;let i = index"
-          menuImagenes
-          ngClass="menu-card"
+      <div style="width: 100%">
+        <div
+          class="cards-with-title"
+          style="width: 100%; height: 63vh; overflow-y: scroll"
         >
-          <ion-item>
-            <ion-avatar slot="start">
-              <img
-                [src]=" menuImagenes[i] == '' ? 'assets/images/no_image_available.png' : menuImagenes[i]"
-              />
-            </ion-avatar>
-            <ion-label>
-              <h5>{{menuItem.nombre}}</h5>
-              <p>{{menuItem.precio | currency : "EUR" : "symbol" }}</p>
-            </ion-label>
-          </ion-item>
-          <ion-footer>
-            <ion-row>
-              <ion-col center text-center>
-                <button>
-                  <ion-icon
-                    name="remove-circle"
-                    (click)="decrementPedido(menuItem)"
-                  ></ion-icon>
-                </button>
-              </ion-col>
-              <ion-col center text-center>
-                <span class="number_item">{{menuItem.numeroDeComanda}}</span>
-              </ion-col>
-              <ion-col center text-center>
-                <button>
-                  <ion-icon
-                    name="add-circle"
-                    (click)="incrementPedido(menuItem)"
-                  ></ion-icon>
-                </button>
-              </ion-col>
-            </ion-row>
-          </ion-footer>
-        </ion-card>
-        <ion-button
-          color="primary"
-          expand="block"
-          style="display: inline-block"
-          (click)="confirmarComanda()"
-          >Confirmar pedido</ion-button
-        >
-        <ion-button
-          color="primary"
-          expand="block"
-          [disabled]=""
-          (click)="finalizarComanda()"
-          [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
-          >Finalizar pedido</ion-button
-        >
-        <ion-button
-          color="danger"
-          expand="block"
-          [disabled]=""
-          [routerLink]="['/home']"
-          class=""
-          (click)="cancelarComanda()"
-          style="display: inline-block"
-          >Cancelar pedido</ion-button
-        >
+          <h4 style="width: 100%; text-align: center">Menus</h4>
+          <ion-card
+            class="menu-item"
+            style="margin-bottom: 1rem; margin-left: 0.5rem !important"
+            *ngFor="let menuItem of menuItems;let i = index"
+            menuImagenes
+            ngClass="menu-card"
+          >
+            <ion-item>
+              <ion-avatar slot="start">
+                <img
+                  [src]=" menuImagenes[i] == '' ? 'assets/images/no_image_available.png' : menuImagenes[i]"
+                />
+              </ion-avatar>
+              <ion-label>
+                <h5>{{menuItem.nombre}}</h5>
+                <p>{{menuItem.precio | currency : "EUR" : "symbol" }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-footer>
+              <ion-row>
+                <ion-col center text-center>
+                  <button>
+                    <ion-icon
+                      name="remove-circle"
+                      (click)="decrementPedido(menuItem)"
+                    ></ion-icon>
+                  </button>
+                </ion-col>
+                <ion-col center text-center>
+                  <span class="number_item">{{menuItem.numeroDeComanda}}</span>
+                </ion-col>
+                <ion-col center text-center>
+                  <button>
+                    <ion-icon
+                      name="add-circle"
+                      (click)="incrementPedido(menuItem)"
+                    ></ion-icon>
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-footer>
+          </ion-card>
+        </div>
+        <div class="buttons" [ngClass]="{'withPagarButton': dataComing.Estado !=  1}">
+          <ion-button
+            color="primary"
+            expand="block"
+            style="display: inline-block"
+            class="button-one"
+            (click)="confirmarComanda()"
+            >Confirmar</ion-button
+          >
+          <ion-button
+            color="primary"
+            expand="block"
+            [disabled]=""
+            class="button-two"
+            (click)="finalizarComanda()"
+            [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
+            >Pagar</ion-button
+          >
+          <ion-button
+            color="danger"
+            expand="block"
+            [disabled]=""
+            [routerLink]="['/home']"
+            class="button-three"
+            (click)="cancelarComanda()"
+            style="display: inline-block"
+            >Cancelar</ion-button
+          >
+        </div>
       </div>
     </div>
     <ng-template #other_content>
-      <div style="height: 250px; margin-left: 5.5rem">
-        <h4 style="width: 100%; text-align: center">Platos</h4>
-        <ion-card
-          class="menu-item"
-          style="margin-bottom: 1rem"
-          *ngFor="let platoItem of platoItems;let i = index"
-          class="plato-card"
+      <div style="width: 100%; margin-left: 5.5rem">
+        <div
+          class="cards-with-title"
+          style="width: 100%; height: 63vh; overflow-y: scroll"
         >
-          <ion-item>
-            <ion-avatar slot="start">
-              <img
-                [src]=" platoImagenes[i] == '' ? 'assets/images/no_image_available.png' : platoImagenes[i]"
-              />
-            </ion-avatar>
-            <ion-label>
-              <h6>{{platoItem.nombre}}</h6>
-              <p>{{platoItem.precio | currency : "EUR" : "symbol" }}</p>
-            </ion-label>
-          </ion-item>
-          <ion-footer>
-            <ion-row>
-              <ion-col center text-center>
-                <button>
-                  <ion-icon
-                    name="remove-circle"
-                    (click)="decrementPedido(platoItem)"
-                  ></ion-icon>
-                </button>
-              </ion-col>
-              <ion-col center text-center>
-                <span class="number_item">{{platoItem.numeroDeComanda}}</span>
-              </ion-col>
-              <ion-col center text-center>
-                <button>
-                  <ion-icon
-                    name="add-circle"
-                    (click)="incrementPedido(platoItem)"
-                  ></ion-icon>
-                </button>
-              </ion-col>
-            </ion-row>
-          </ion-footer>
-        </ion-card>
-        <ion-button
-          color="primary"
-          expand="block"
-          [disabled]=""
-          style="display: inline-block"
-          (click)="confirmarComanda()"
-          >Confirmar pedido</ion-button
+          <h4 style="width: 100%; text-align: center">Platos</h4>
+          <ion-card
+            class="menu-item"
+            style="margin-bottom: 1rem; margin-left: 0.5rem !important"
+            *ngFor="let platoItem of platoItems;let i = index"
+            class="plato-card"
+          >
+            <ion-item>
+              <ion-avatar slot="start">
+                <img
+                  [src]=" platoImagenes[i] == '' ? 'assets/images/no_image_available.png' : platoImagenes[i]"
+                />
+              </ion-avatar>
+              <ion-label>
+                <h6>{{platoItem.nombre}}</h6>
+                <p>{{platoItem.precio | currency : "EUR" : "symbol" }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-footer>
+              <ion-row>
+                <ion-col center text-center>
+                  <button>
+                    <ion-icon
+                      name="remove-circle"
+                      (click)="decrementPedido(platoItem)"
+                    ></ion-icon>
+                  </button>
+                </ion-col>
+                <ion-col center text-center>
+                  <span class="number_item">{{platoItem.numeroDeComanda}}</span>
+                </ion-col>
+                <ion-col center text-center>
+                  <button>
+                    <ion-icon
+                      name="add-circle"
+                      (click)="incrementPedido(platoItem)"
+                    ></ion-icon>
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-footer>
+          </ion-card>
+        </div>
+        <div
+          class="buttons"
+          [ngClass]="{'withPagarButton': dataComing.Estado !=  1}"
         >
-        <ion-button
-          color="primary"
-          expand="block"
-          [disabled]=""
-          (click)="finalizarComanda()"
-          [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
-          >Finalizar pedido</ion-button
-        >
-        <ion-button
-          color="danger"
-          expand="block"
-          [disabled]=""
-          [routerLink]="['/home']"
-          class=""
-          (click)="cancelarComanda()"
-          style="display: inline-block"
-          >Cancelar pedido</ion-button
-        >
+          <ion-button
+            color="primary"
+            expand="block"
+            [disabled]=""
+            style="display: inline-block"
+            (click)="confirmarComanda()"
+            class="button-one"
+            >Confirmar</ion-button
+          >
+          <ion-button
+            color="primary"
+            expand="block"
+            [disabled]=""
+            (click)="finalizarComanda()"
+            [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
+            class="button-two"
+            >Pagar</ion-button
+          >
+          <ion-button
+            color="danger"
+            expand="block"
+            [disabled]=""
+            [routerLink]="['/home']"
+            class="button-three"
+            (click)="cancelarComanda()"
+            style="display: inline-block"
+            >Cancelar</ion-button
+          >
+        </div>
       </div>
     </ng-template>
   </div>

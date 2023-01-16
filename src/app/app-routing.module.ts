@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'cuenta',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
@@ -53,11 +53,21 @@ const routes: Routes = [
     path: 'cobros',
     loadChildren: () =>
       import('./pages/cobros/cobros.module').then((m) => m.CobrosPageModule),
-  },  {
-    path: 'pdf-viewer',
-    loadChildren: () => import('./pages/pdf-viewer/pdf-viewer.module').then( m => m.PdfViewerPageModule)
   },
-
+  {
+    path: 'pdf-viewer',
+    loadChildren: () =>
+      import('./pages/pdf-viewer/pdf-viewer.module').then(
+        (m) => m.PdfViewerPageModule
+      ),
+  },
+  {
+    path: 'pdf-viewer-factura',
+    loadChildren: () =>
+      import('./pages/pdf-viewer-factura/pdf-viewer-factura.module').then(
+        (m) => m.PdfViewerFacturaPageModule
+      ),
+  },
 ];
 
 @NgModule({
