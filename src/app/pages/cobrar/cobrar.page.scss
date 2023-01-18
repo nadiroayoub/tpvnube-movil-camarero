@@ -1,8 +1,60 @@
-ion-content {
-  ion-header {
-    .title-mesa {
-      font-weight: bold;
+ion-col {
+  button {
+    background-color: transparent;
+    ion-icon {
+      color: #57ae51;
     }
+  }
+}
+.ion-content {
+  position: relative;
+}
+.fixed-content {
+  position: absolute;
+  width: 100vw;
+  bottom: 0;
+  background-color: #f8f8f8;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  ion-text {
+    color: #57ae51;
+    font-weight: bold;
+  }
+}
+.ion-align-self-center {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 79%;
+  border-radius: 20px;
+  ion-col {
+    height: 100%;
+  }
+  button {
+    height: 100%;
+    cursor: not-allowed;
+    width: 100%;
+    border-radius: 5px;
+    font-weight: bolder;
+    padding: 0.3rem;
+    background: #bdbdc6;
+    color: #ffffff;
+    &.active {
+      background: #57ae51;
+      color: #ffffff;
+      cursor: pointer;
+    }
+    &.active-factura {
+      color: #ffffff;
+      background: #57ae51;
+      cursor: pointer;
+    }
+  }
+  &.imprimir {
+    width: 12rem;
+    margin: 0 auto;
   }
 }
 .fixed-content {
@@ -22,4 +74,98 @@ ion-content {
       color: black;
     }
   }
+}
+.ion-align-self-center:last-child {
+  width: 90%;
+  border-radius: 0px 0px 50px 50px;
+  margin: 0 auto;
+  ion-button::part(native) {
+    span {
+      --background-color: red;
+    }
+  }
+  .cobrar-button {
+    --border-radius: 0px 0px 50px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+      background: #ccc;
+    }
+  }
+}
+
+.cobrar-button_textos {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* .goBottom{
+
+} */
+.comandas {
+  background: white;
+  box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}
+.estadoComanda {
+  background-color: #dc9b1c;
+}
+.estadoPreparada {
+  background-color: #32b768;
+}
+.estadoRechazada {
+  background-color: #e33535;
+}
+
+ion-chip {
+  &.active {
+    ion-label,
+    ion-icon {
+      color: white !important;
+    }
+  }
+}
+
+ion-chip:nth-child(2) {
+  ion-input.custom {
+    --background: #373737;
+    --color: #fff;
+    --placeholder-color: #ddd;
+    --placeholder-opacity: 0.8;
+
+    --padding-bottom: 10px;
+    --padding-end: 10px;
+    --padding-start: 10px;
+    --padding-top: 10px;
+  }
+
+  &.active {
+    background-color: #32b768;
+    border-radius: 5px 5px 0 0;
+    ion-label,
+    ion-icon {
+      color: white !important;
+    }
+  }
+}
+.calculadora {
+  display: none;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }

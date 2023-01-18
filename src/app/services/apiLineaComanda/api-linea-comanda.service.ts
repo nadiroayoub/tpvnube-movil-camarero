@@ -18,17 +18,23 @@ export class ApiLineaComandaService extends ApiService<LineaComanda> {
   }
 
   nuevaLineaPlato(
-    resource: PostLineaComanda | Comanda
+    p_comanda: number,
+    p_cantidad: number,
+    p_plato: number
   ): Observable<PostLineaComanda | Comanda> {
-    var endpoint = `${this.apiUrl}/NuevaLineaPlato`;
+    var endpoint = `${this.apiUrl}/NuevaLineaPlato?p_comanda=${p_comanda}&p_cantidad=${p_cantidad}&p_plato=${p_plato}`;
+    var resource;
     return this.httpClient
       .post<Comanda>(`${endpoint}`, resource)
       .pipe(catchError(this.handleError));
   }
   nuevaLineaMenu(
-    resource: PostLineaComanda | Comanda
+    p_comanda: number,
+    p_cantidad: number,
+    p_menu: number
   ): Observable<PostLineaComanda | Comanda> {
-    var endpoint = `${this.apiUrl}/NuevaLineaMenu`;
+    var endpoint = `${this.apiUrl}/NuevaLineaMenu?p_comanda=${p_comanda}&p_cantidad=${p_cantidad}&p_menu=${p_menu}`;
+    var resource;
     return this.httpClient
       .post<Comanda>(`${endpoint}`, resource)
       .pipe(catchError(this.handleError));

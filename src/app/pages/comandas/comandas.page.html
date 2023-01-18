@@ -1,0 +1,84 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title style="text-align: center"
+      >Mesa {{this.dataComingFromMenuPage.Numero}}</ion-title
+    >
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/blackLogo.png" alt="" width="40px" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="text-align: center">
+  <ion-grid
+    size="12"
+    size-sm="8"
+    offset-sm="2"
+    style="display: flex; flex-flow: column; height: 100%"
+  >
+    <div
+      class="comandas"
+      (click)="openCobrarPage(comanda)"
+      *ngFor="let comanda of listaComanda; let i = index"
+      [ngStyle]="{'cursor': comanda.nombre ==  1 ? 'pointer' : 'default', 'padding-bottom': comanda.nombre !=  1 ? '2rem' : '0rem',
+      'pointer-events': comanda.nombre ==  1 ? 'auto' : 'none' }"
+    >
+      <h4
+        (click)="hideMenuItems($event)"
+        style="margin-top: 1rem; color: white; margin-top: 0"
+        [ngClass]="{'estadoComanda': comanda.nombre ==  1,  'estadoPreparada' : comanda.nombre == 2, 'estadoRechazada' : comanda.nombre == 3}"
+      >
+        Comanda {{i+1}}
+        <span style="font-size: 10px"
+          >Estado: {{comanda.nombre == 1 ? "comanda":(comanda.nombre ==2 ?
+          'preparada': 'rechazada')}}</span
+        >
+      </h4>
+      <ion-card *ngFor="let menuItem of comanda.items;let i = index;">
+        <ion-item style="height: 3, 5rem">
+          <ion-avatar slot="start" style="margin-top: 0">
+            <!-- <img src="{{menuItem.Foto}}" /> -->
+            <img
+              [src]=" menuItem.Foto == '' ? 'assets/images/no_image_available.png' : menuItem.Foto"
+            />
+          </ion-avatar>
+          <ion-label>
+            <h4 style="margin: 0">{{menuItem.Nombre}}</h4>
+            <p style="display: inline-block">
+              {{menuItem.Precio | currency : "EUR" : "symbol" }}
+              <span>x{{menuItem.Cantidad}}</span>
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+      <button
+        class="active imprimirCuenta"
+        ion-button
+        text-center
+        full
+        (click)="openCuentaAlreadyCreated(comanda.Pdf)"
+        [ngStyle]="{'display': comanda.nombre ==  1 ? 'none' : 'inline-block', 'pointer-events':'auto' }"
+      >
+        Ticket
+      </button>
+    </div>
+  </ion-grid>
+  <!-- <button class="goBottom">Go to the bottom</button> -->
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar style="padding: 0 30px">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/home-icon.png" alt="" width="20px" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end"> </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

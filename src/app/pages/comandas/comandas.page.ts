@@ -4,23 +4,23 @@ import { LoadingController, ToastController } from '@ionic/angular';
 import { Comanda, CuentaComanda } from 'src/app/model/Comanda';
 import { ApiCobroService } from 'src/app/services/apiCobro/api-cobro.service';
 import { ApiComandaService } from '../../services/apiComanda/api-comanda.service';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { Usuario } from 'src/app/interfaces/interfaces';
+
 import { ApiNegocioService } from 'src/app/services/apiNegocio/api-negocio.service';
 import { MesaService } from 'src/app/services/apiMesa/mesa.service';
-import { Estado } from 'src/app/model/Mesa';
+
 import { ApiClienteService } from '../../services/apiCliente/api-cliente.service';
-import { Cliente } from '../../model/Cliente';
+
 import { ApiFacturaService } from '../../services/apiFactura/api-factura.service';
-import { Factura } from 'src/app/model/Factura';
+import { Negocio } from '../../model/Negocio';
 
 @Component({
   selector: 'app-cuenta',
-  templateUrl: './cuenta.page.html',
-  styleUrls: ['./cuenta.page.scss'],
+  templateUrl: './comandas.page.html',
+  styleUrls: ['./comandas.page.scss'],
 })
-export class CuentaPage implements OnInit {
+export class ComandasPage implements OnInit {
   currentNumber = 0;
   menuItems: CuentaComanda[];
   public cuentaDescargada = false;
@@ -44,17 +44,27 @@ export class CuentaPage implements OnInit {
     private apiFacturaService: ApiFacturaService
   ) {}
 
+  ionViewDidEnter() {
+    this.listaComanda = [];
+    this.ngOnInit();
+  }
   ngOnInit() {
     this.authService.usuario.subscribe((usuario) => {
       this.usuario = usuario;
     });
     this.activatedRoute.queryParams.subscribe((params) => {
-      this.dataComingFromMenuPage = JSON.parse(params['mesa']);
+      if (params['mesa'] == undefined) {
+        this.dataComingFromMenuPage = JSON.parse(
+          this.activatedRoute.snapshot.params.mesa
+        );
+      } else {
+        this.dataComingFromMenuPage = JSON.parse(params['mesa']);
+      }
     });
     // mesa id
     // console.log(this.dataComingFromMenuPage.Id);
     this.apiComandaService
-      .getAllComandaOfMesa(262144)
+      .getAllComandaOfMesa(this.dataComingFromMenuPage.Id)
       .subscribe((comandas: Comanda[]) => {
         console.log(comandas);
         comandas.forEach((comanda) => {
@@ -86,23 +96,46 @@ export class CuentaPage implements OnInit {
                 ? lineaComanda.MenuOfLineaComanda.Precio
                 : lineaComanda.PlatoOfLineaComanda.Precio;
           });
-          this.listaComanda.push({ nombre: comanda.EstadoComanda, items: comandaItems });
+          this.listaComanda.push({
+            nombre: comanda.EstadoComanda,
+            items: comandaItems,
+            Id: comanda.Id,
+            Pdf: comanda.Pdf,
+          });
+          console.log(this.listaComanda);
         });
       });
   }
-  increment() {
-    this.currentNumber++;
+  openCuentaAlreadyCreated(filename) {
+    var data = { filename, mesa: this.dataComingFromMenuPage };
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        data: JSON.stringify(data),
+      },
+    };
+    this.router.navigate(['/pdf-viewer'], navigationExtras);
   }
-
-  decrement() {
-    if (this.currentNumber > 0) {
-      this.currentNumber--;
+  openCobrarPage(comanda) {
+    if (comanda.Pdf == '') {
+      this.apiComandaService.get(comanda.Id).subscribe((comandaFromBack) => {
+        // TODO: go to cobrar page to show comanda details and pass comanda data
+        let navigationExtras: NavigationExtras = {
+          queryParams: {
+            comanda: JSON.stringify(comandaFromBack),
+          },
+        };
+        this.router.navigate(['/cobrar'], navigationExtras);
+      });
     }
   }
   openCuenta() {
     this.cuentaDescargada = true;
     this.apiCobroService
-      .createCuenta(this.precioTotal, this.listaComanda)
+      .createCuenta(
+        this.precioTotal,
+        this.listaComanda,
+        this.usuario.Negocio.Id
+      )
       .subscribe((filename: string) => {
         //TODO: change mesa status
         // this.dataComingFromMenuPage.Estado = Estado.pendientePago;
@@ -146,52 +179,52 @@ export class CuentaPage implements OnInit {
       }
     }
   }
-  cobrar() {
-    this.cobroHecho = true;
-    this.authService.usuario.subscribe((usuario: any) => {
-      // TODO: To discuss: important data to create cobro
-      this.apiNegocioService
-        .get(usuario.Negocio.Id)
-        .subscribe((negocio: any) => {
-          var cobro = {
-            Id: 0,
-            Monto: 0,
-            Comanda_oid: 0,
-            Cliente_oid: 0,
-            TipoDeCobro: 'string',
-            TipoCobro_oid: 0,
-            Caja_oid: negocio.CajaOfNegocio[0],
-            NumeroTransaccion: 'string',
-            Empleado_oid: usuario.Id,
-            Negocio_oid: negocio.Id,
-          };
-          this.apiCobroService.addPostCobroSpecific(cobro).subscribe({
-            next: (res) => {
-              // TODO: modify commanda status after creating cobro 1--> 2
-              this.presentToast(
-                '¡Cobro creado!',
-                'bottom',
-                'success',
-                'checkmark'
-              ).then((toast) => {
-                toast.present();
-              });
-              return res;
-            },
-            error: () => {
-              this.presentToast(
-                '¡Error al crear cobro!',
-                'bottom',
-                'danger',
-                'close'
-              ).then((toast) => {
-                toast.present();
-              });
-            },
-          });
-        });
-    });
-  }
+  // cobrar() {
+  //   this.cobroHecho = true;
+  //   this.authService.usuario.subscribe((usuario: any) => {
+  //     // TODO: To discuss: important data to create cobro
+  //     this.apiNegocioService
+  //       .get(usuario.Negocio.Id)
+  //       .subscribe((negocio: any) => {
+  //         var cobro = {
+  //           Id: 0,
+  //           Monto: 0,
+  //           Comanda_oid: 0,
+  //           Cliente_oid: 0,
+  //           TipoDeCobro: 'string',
+  //           TipoCobro_oid: 0,
+  //           Caja_oid: negocio.CajaOfNegocio[0],
+  //           NumeroTransaccion: 'string',
+  //           Empleado_oid: usuario.Id,
+  //           Negocio_oid: negocio.Id,
+  //         };
+  //         this.apiCobroService.addPostCobroSpecific(cobro).subscribe({
+  //           next: (res) => {
+  //             // TODO: modify commanda status after creating cobro 1--> 2
+  //             this.presentToast(
+  //               '¡Cobro creado!',
+  //               'bottom',
+  //               'success',
+  //               'checkmark'
+  //             ).then((toast) => {
+  //               toast.present();
+  //             });
+  //             return res;
+  //           },
+  //           error: () => {
+  //             this.presentToast(
+  //               '¡Error al crear cobro!',
+  //               'bottom',
+  //               'danger',
+  //               'close'
+  //             ).then((toast) => {
+  //               toast.present();
+  //             });
+  //           },
+  //         });
+  //       });
+  //   });
+  // }
   //#region toggle comandas
   hideMenuItems(comanda) {
     console.log(comanda);

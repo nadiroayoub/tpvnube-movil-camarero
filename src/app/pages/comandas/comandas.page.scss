@@ -113,15 +113,35 @@ ion-col {
   width: 80%;
   margin: 0 auto;
   margin-bottom: 1rem;
+  cursor: pointer;
+  position: relative;
 }
 .estadoComanda {
-  background-color: #DC9B1C;
+  background-color: #dc9b1c;
 }
 .estadoPreparada {
   background-color: #32b768;
 }
 .estadoRechazada {
-  background-color: #E33535;
+  background-color: #e33535;
 }
-
-
+button {
+  height: 100%;
+  cursor: not-allowed;
+  width: 100%;
+  border-radius: 5px;
+  font-weight: bolder;
+  padding: 0.3rem;
+  background: #bdbdc6;
+  color: #ffffff;
+  &.active {
+    background: #57ae51;
+    color: #ffffff;
+    cursor: pointer;
+    bottom: 5px;
+    right: 10px;
+    position: absolute;
+    width: 3rem;
+    height: 2rem;
+  }
+}

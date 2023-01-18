@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-pdf-viewer',
@@ -8,10 +8,30 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PdfViewerPage implements OnInit {
   pdfSrc;
-  constructor(private activatedRoute: ActivatedRoute) {}
+  data;
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
+
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
-      this.pdfSrc = '/assets/pdfs/CuentaPdfs/' + JSON.parse(params['filename']);
+      this.data = JSON.parse(params['data']);
+      this.pdfSrc =
+        '/assets/pdfs/CuentaPdfs/' + JSON.parse(params['data']).filename;
     });
+  }
+  goBackToComandaPage() {
+    if(this.data.comandaId == undefined){
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          mesa: JSON.stringify(this.data.mesa),
+        },
+      };
+      this.router.navigate(['/comandas'], navigationExtras);
+    }
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        dataFromPdfViewer: JSON.stringify(this.data),
+      },
+    };
+    this.router.navigate(['/cobrar'], navigationExtras);
   }
 }

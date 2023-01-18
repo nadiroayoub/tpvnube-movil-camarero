@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CuentaPageRoutingModule } from './cuenta-routing.module';
+import { ComandasPageRoutingModule } from './comandas-routing.module';
 
-import { CuentaPage } from './cuenta.page';
+import { ComandasPage } from './comandas.page';
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, CuentaPageRoutingModule],
-  declarations: [CuentaPage],
+  imports: [CommonModule, FormsModule, IonicModule, ComandasPageRoutingModule],
+  declarations: [ComandasPage],
 })
 export class CuentaPageModule {}

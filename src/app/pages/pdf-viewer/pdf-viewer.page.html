@@ -1,9 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button menu="main-menu"></ion-menu-button>
+      <ion-button (click)="goBackToComandaPage()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <!-- <ion-back-button (click)="goBackToComandaPage()"></ion-back-button> -->
     </ion-buttons>
-    <ion-title>Cuenta</ion-title>
+    <ion-title style="text-align: center">Cuenta</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/blackLogo.png" alt="" width="40px" />
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

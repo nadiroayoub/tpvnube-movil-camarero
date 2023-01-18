@@ -1,9 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button> </ion-back-button>
+      <ion-button (click)="goBackToComandaPage()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <!-- <ion-back-button> </ion-back-button> -->
     </ion-buttons>
-    <ion-title>Factura</ion-title>
+    <ion-title style="text-align: center">Factura</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/home']">
+        <img src="assets/icon/blackLogo.png" alt="" width="40px" />
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

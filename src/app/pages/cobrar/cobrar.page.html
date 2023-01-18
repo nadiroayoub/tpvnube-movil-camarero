@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title></ion-title>
     <ion-buttons slot="start">
       <ion-menu-button menu="main-menu"></ion-menu-button>
     </ion-buttons>
+    <ion-title style="text-align: center">Comanda</ion-title>
     <ion-buttons slot="end">
       <ion-button [routerLink]="['/home']">
         <img src="assets/icon/blackLogo.png" alt="" width="40px" />
@@ -19,50 +19,134 @@
     offset-sm="2"
     style="display: flex; flex-flow: column; height: 100%"
   >
-    <ion-header>
-      <h5 class="title-mesa">Mesa 2</h5>
-    </ion-header>
-    <ion-card *ngFor="let menuItem of menuItems;let i = index;">
-      <ion-item>
-        <ion-avatar slot="start">
-          <img src="{{menuItem.imagen}}" />
-        </ion-avatar>
-        <ion-label>
-          <h3>{{menuItem.nombre}}</h3>
-          <p>{{menuItem.precio}}</p>
-        </ion-label>
-      </ion-item>
-    </ion-card>
-    <div class="fixed-content">
-      <ion-text>
-        <h6>Total</h6>
-      </ion-text>
-      <ion-text>
-        <h6>15.50€</h6>
-      </ion-text>
-    </div>
-    <div class="pay-methods">
-      <ion-chip>
-        <ion-icon name="card" style="color: black"></ion-icon>
-        <ion-label>Pago con tarjeta</ion-label>
-      </ion-chip>
-      <ion-chip>
-        <ion-icon name="cash" style="color: black"></ion-icon>
-        <ion-label>Pago en efectivo</ion-label>
-      </ion-chip>
-    </div>
-    <ion-row class="ion-align-self-center">
-      <ion-col>
-        <ion-button
-          [routerLink]="['/cuenta']"
-          [disabled]=""
-          expand="block"
-          text-center
-          >Cobrar</ion-button
+    <div class="comandas" *ngFor="let comanda of listaComanda; let i = index">
+      <h4
+        (click)="hideMenuItems($event)"
+        style="margin-top: 1rem; color: white; margin-top: 0"
+        [ngClass]="{'estadoComanda': comanda.nombre ==  1}"
+        ng-class="{estadoComanda : comanda.nombre ==  1, estadoPreparada : comanda.nombre == 2, estadoRechazada : comanda.nombre == 3}"
+      >
+        Comanda {{i+1}}
+        <span style="font-size: 10px"
+          >Estado: {{comanda.nombre == 1 ? "comanda":(comanda.nombre ==2 ?
+          'preparada': 'rechazada')}}</span
         >
-      </ion-col>
-    </ion-row>
+        <!-- <ion-icon
+          name="arrow-up-outline"
+          [ngStyle]="{'display': showComanda ? 'none' : 'inline-block'}"
+        ></ion-icon> -->
+        <!-- <ion-icon
+          name="arrow-down-outline"
+          [ngStyle]="{'display': !showComanda ? 'none' : 'inline-block'}"
+        ></ion-icon> -->
+      </h4>
+      <ion-card *ngFor="let menuItem of comanda.items;let i = index;">
+        <ion-item style="height: 3, 5rem">
+          <ion-avatar slot="start" style="margin-top: 0">
+            <!-- <img src="{{menuItem.Foto}}" /> -->
+            <img
+              [src]=" menuItem.Foto == '' ? 'assets/images/no_image_available.png' : menuItem.Foto"
+            />
+          </ion-avatar>
+          <ion-label>
+            <h4 style="margin: 0">{{menuItem.Nombre}}</h4>
+            <p style="display: inline-block">
+              {{menuItem.Precio | currency : "EUR" : "symbol" }}
+              <span>x{{menuItem.Cantidad}}</span>
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+    </div>
+    <div class="fixed-container">
+      <ion-row class="ion-align-self-center imprimir">
+        <ion-col class="ion-align-self-center-col">
+          <button
+            class="active imprimirCuenta"
+            ion-button
+            text-center
+            full
+            (click)="openCuenta()"
+          >
+            Ticket
+          </button>
+        </ion-col>
+        <ion-col class="ion-align-self-center-col">
+          <button
+            ion-button
+            text-center
+            full
+            [disabled]="!cobroHecho"
+            [ngClass]="{'active-factura': cobroHecho === true}"
+            (click)="openFactura()"
+          >
+            Factura
+          </button>
+        </ion-col>
+      </ion-row>
+      <div class="pay-methods">
+        <ion-chip
+          (click)="elegirMetodoPago($event)"
+          class="tarjeta"
+          [ngStyle]="{'background': (tipoCobroTarjeta==true  && tipoCobroTarjeta!=undefined) ? '#32b768':'rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.12)'}"
+        >
+          <ion-icon name="card" style="color: black"></ion-icon>
+          <ion-label>Pago con tarjeta</ion-label>
+        </ion-chip>
+        <ion-chip
+          class="efectivo"
+          (click)="elegirMetodoPago($event)"
+          [ngStyle]="{'background': (tipoCobroTarjeta==false  && tipoCobroTarjeta!=undefined)? '#32b768':'rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.12)'}"
+        >
+          <ion-icon name="cash" style="color: black"></ion-icon>
+          <ion-label>Pago en efectivo</ion-label>
+        </ion-chip>
+        <ion-chip
+          class="calculadora"
+          [ngStyle]="{'display': (tipoCobroTarjeta==true || tipoCobroTarjeta == undefined) ? 'none' : 'grid', 'background-color': '#32b768', 'margin-top': '-0.3rem',
+            'border-radius': '0 0 5px 5px',
+            'grid-template-columns': '1fr 1fr',
+            'grid-template-rows': '1fr',
+            'height': '3rem'}"
+        >
+          <ion-input
+            type="number"
+            [value]="pago"
+            (input)="setPago($event.target.value)"
+            placeholder="Entregado"
+            style="color: white; border: 1px solid white"
+          ></ion-input>
+          <p
+            class="resto"
+            style="color: white; text-align: left; margin: 0; margin-left: 1rem"
+          >
+            Cambio: {{ precioTotal - pago | currency : "EUR" : "symbol" }}
+          </p>
+        </ion-chip>
+      </div>
+      <ion-row class="ion-align-self-center">
+        <ion-col>
+          <ion-button
+            [routerLink]="['/cobrar']"
+            disabled="true"
+            [disabled]="cuentaDescargada == false || tipoCobroTarjeta == undefined"
+            expand="block"
+            text-center
+            class="cobrar-button"
+            (click)="cobrar()"
+          >
+            <div class="cobrar-button_textos">
+              <span class="cobrar-button_text">Cobrar</span>
+              <span class="cobrar-button_total"
+                >{{precioTotal | currency : "EUR" : "symbol" }}</span
+              >
+            </div>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
   </ion-grid>
+  <!-- <button class="goBottom">Go to the bottom</button> -->
 </ion-content>
 
 <ion-footer>

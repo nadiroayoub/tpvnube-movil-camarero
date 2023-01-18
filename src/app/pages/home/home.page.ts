@@ -25,21 +25,27 @@ export class HomePage implements OnInit {
     private authService: AuthService,
     private activatedRoute: ActivatedRoute
   ) {
-    activatedRoute.params.subscribe((val) => {
-      // put the code from `ngOnInit` here
-      this.mesas = [];
+    // activatedRoute.params.subscribe((val) => {
+    //   // put the code from `ngOnInit` here
+    this.mesas = [];
+    //   this.getMesas();
+    // });
+  }
+  ionViewDidEnter() {
+    console.log('home page');
+    console.log('ngonint');
+    this.mesas = [];
+    this.authService.usuario.subscribe((res) => {
+      this.usuario = res;
       this.getMesas();
     });
   }
-
   ngOnInit() {
-    setTimeout(() => {
-      this.authService.usuario.subscribe((res) => {
-        this.usuario = res;
-        console.log(this.usuario);
-        this.getMesas();
-      });
-    }, 1000);
+    // console.log('ngonint');
+    // this.authService.usuario.subscribe((res) => {
+    //   this.usuario = res;
+    //   this.getMesas();
+    // });
   }
   changed() {
     console.log(this.enteredSearchValue);
@@ -58,10 +64,9 @@ export class HomePage implements OnInit {
     });
   }
   navigateWithData(mesaNumber: number) {
-    const fullname = 'asa';
     this.navCtrl.navigateForward([
-      this.mesas[mesaNumber].Estado !== 3 ? 'menu' : 'cuenta',
-      { data: JSON.stringify(this.mesas[mesaNumber]) },
+      this.mesas[mesaNumber].Estado !== 3 ? 'menu' : 'comandas',
+      { mesa: JSON.stringify(this.mesas[mesaNumber]) },
     ]);
   }
 }

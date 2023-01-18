@@ -23,14 +23,26 @@ export class ApiCobroService extends ApiService<Cobro> {
       .pipe(catchError(this.handleError));
   }
 
-  createCuenta(total: number, resource: any): Observable<string> {
-    var endpoint = `${this.apiUrl}/CreateCuenta?total=${total}`;
+  createCuenta(
+    total: number,
+    resource: any,
+    negocioId: number
+  ): Observable<string> {
+    var endpoint = `${this.apiUrl}/CreateCuenta?total=${total}&negocioId=${negocioId}`;
     return this.httpClient
       .post<string>(`${endpoint}`, resource)
       .pipe(catchError(this.handleError));
   }
-  addPostCobroSpecific(resource: PostCobro): Observable<any> {
-    var endpoint = `${this.apiUrl}/Nuevo`;
+  addPostCobroSpecific(
+    p_monto,
+    p_comanda,
+    p_tipocobro,
+    p_caja,
+    p_empleado,
+    p_negocio
+  ): Observable<any> {
+    var endpoint = `${this.apiUrl}/Nuevo?p_monto=${p_monto}&p_comanda=${p_comanda}&p_tipocobro=${p_tipocobro}&p_caja=${p_caja}&p_empleado=${p_empleado}&p_negocio=${p_negocio}`;
+    var resource;
     return this.httpClient
       .post(`${endpoint}`, resource)
       .pipe(catchError(this.handleError));

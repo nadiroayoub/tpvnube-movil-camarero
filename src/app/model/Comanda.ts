@@ -11,17 +11,18 @@ export interface Comanda {
   Factura: Factura;
   MesaOfComanda: Mesa;
   AllLineaComandaOfComanda: LineaComanda[];
+  Pdf: string;
 }
 export interface PostComanda {
   EstadoComanda: EstadoComanda;
   Mesa_oid: number;
   Empleado_oid: number;
 }
-export interface CuentaComanda  {
+export interface CuentaComanda {
   Nombre: string;
- Precio: string;
- Foto: string;
-Cantidad: number;
+  Precio: string;
+  Foto: string;
+  Cantidad: number;
 }
 
 export enum EstadoComanda {

@@ -30,9 +30,11 @@ const routes: Routes = [
       import('./pages/menu/menu.module').then((m) => m.MenuPageModule),
   },
   {
-    path: 'cuenta',
+    path: 'comandas',
     loadChildren: () =>
-      import('./pages/cuenta/cuenta.module').then((m) => m.CuentaPageModule),
+      import('./pages/comandas/comandas.module').then(
+        (m) => m.CuentaPageModule
+      ),
   },
   {
     path: 'profile',
