@@ -26,12 +26,13 @@ export class PdfViewerPage implements OnInit {
         },
       };
       this.router.navigate(['/comandas'], navigationExtras);
+    }else {
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          dataFromPdfViewer: JSON.stringify(this.data),
+        },
+      };
+      this.router.navigate(['/cobrar'], navigationExtras);
     }
-    let navigationExtras: NavigationExtras = {
-      queryParams: {
-        dataFromPdfViewer: JSON.stringify(this.data),
-      },
-    };
-    this.router.navigate(['/cobrar'], navigationExtras);
   }
 }

@@ -11,10 +11,6 @@ export class PdfViewerFacturaPage implements OnInit {
   data;
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
   ngOnInit() {
-    // this.activatedRoute.queryParams.subscribe((params) => {
-    //   this.pdfSrc =
-    //     '/assets/pdfs/FacturaPdfs/' + JSON.parse(params['filename']);
-    // });
     this.activatedRoute.queryParams.subscribe((params) => {
       this.data = JSON.parse(params['data']);
       this.pdfSrc =

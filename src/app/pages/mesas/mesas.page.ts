@@ -3,17 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Mesa } from 'src/app/model/Mesa';
-import { MesaService } from '../../services/apiMesa/mesa.service';
-import { AuthService } from '../../services/auth/auth.service';
-import { Observable } from 'rxjs/internal/Observable';
-import { interval } from 'rxjs';
+import { MesaService } from 'src/app/services/apiMesa/mesa.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { ApiComandaService } from '../../services/apiComanda/api-comanda.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.page.html',
-  styleUrls: ['./home.page.scss'],
+  selector: 'app-mesas',
+  templateUrl: './mesas.page.html',
+  styleUrls: ['./mesas.page.scss'],
 })
-export class HomePage implements OnInit {
+export class MesasPage implements OnInit {
   mesas: Mesa[] = [];
   enteredSearchValue: any;
   usuario;
@@ -25,7 +24,8 @@ export class HomePage implements OnInit {
     private navCtrl: NavController,
     private apiMesaService: MesaService,
     private authService: AuthService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private apiComandaService: ApiComandaService
   ) {
     // activatedRoute.params.subscribe((val) => {
     //   // put the code from `ngOnInit` here
@@ -55,16 +55,37 @@ export class HomePage implements OnInit {
   getMesas(): any {
     // get mesas from user service
     //get all mesas filtring by user id
+    var mesasTodas = [];
     this.apiMesaService.getList().subscribe((mesas) => {
       mesas.forEach((mesaAll) => {
         this.usuario.Negocio.Mesas.forEach((mesa) => {
           if (mesa.Id == mesaAll.Id) {
-            this.mesas.push(mesaAll);
+            // have all mesas de un negocio
+            mesasTodas.push(mesaAll);
           }
         });
-        this.disableImageNoData = this.mesas.length > 0 ? true : false;
       });
-      this.searchable = this.mesas;
+      var mesasFiltrados = [];
+      this.apiComandaService
+        .dameComandasEmpleado(this.usuario.Id)
+        .subscribe((listaComandas) => {
+          mesasTodas.forEach((mesa) => {
+            listaComandas.forEach((comanda) => {
+              if (comanda.MesaOfComanda.Id == mesa.Id) {
+                var index = mesasFiltrados.findIndex((x) => x.Id == mesa.Id);
+                // here you can check specific property for an object whether it exist in your array or not
+                index === -1
+                  ? mesasFiltrados.push(mesa)
+                  : console.log('object already exists');
+                // mesasFiltrados.push(mesa);
+              }
+            });
+          });
+          // add mesas Filtrados to this.mesas
+          this.mesas = mesasFiltrados;
+          this.searchable = this.mesas;
+          this.disableImageNoData = this.mesas.length > 0 ? true : false;
+        });
     });
   }
   navigateWithData(mesaNumber: number) {
@@ -73,6 +94,7 @@ export class HomePage implements OnInit {
       { mesa: JSON.stringify(this.mesas[mesaNumber]) },
     ]);
   }
+
   //#region filter by search bar
   setFilteredItems() {
     this.mesas = this.filterItems(this.enteredSearchValue);

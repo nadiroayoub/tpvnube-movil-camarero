@@ -1,3 +1,9 @@
 ion-item {
   cursor: pointer;
 }
+.activated {
+  --background: #32b768;
+  .childs {
+    color: white;
+  }
+}

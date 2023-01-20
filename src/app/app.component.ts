@@ -33,12 +33,20 @@ export class AppComponent implements OnInit {
             this.usuario = res;
             this.createProfileImage();
           });
-        }, 2000);
+        }, 4000);
       }
     });
   }
 
-  goTo(route: string) {
+  goTo(route: string, event) {
+    var target = event.target;
+    var elements = document.querySelectorAll('ion-item');
+    if (target.tagName == 'ION-ITEM') {
+      elements.forEach((ionitem) => {
+        ionitem.classList.remove('activated');
+      });
+      target.classList.add('activated');
+    }
     this._router.navigate(['/' + route]);
     this.menu.close();
   }

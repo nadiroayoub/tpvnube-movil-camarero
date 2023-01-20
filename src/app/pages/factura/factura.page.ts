@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Cliente } from 'src/app/model/Cliente';
 import { Factura } from 'src/app/model/Factura';
 import { ApiClienteService } from 'src/app/services/apiCliente/api-cliente.service';
 import { ApiFacturaService } from 'src/app/services/apiFactura/api-factura.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-factura',
@@ -16,12 +17,14 @@ export class FacturaPage implements OnInit {
   nifNieRegex = /^[XYZ]?\d{5,8}[A-Z]$/;
   emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   dataComingFromCobrarPage;
+  usuario;
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private router: Router,
     private apiClienteService: ApiClienteService,
-    private apiFacturaService: ApiFacturaService
+    private apiFacturaService: ApiFacturaService,
+    private apiAuthService: AuthService
   ) {
     this.todo = this.formBuilder.group({
       nombre: [''],
@@ -34,10 +37,13 @@ export class FacturaPage implements OnInit {
   }
 
   ngOnInit() {
-    this.activatedRoute.queryParams.subscribe((params) => {
-      if (params['data'] != undefined) {
-        this.dataComingFromCobrarPage = JSON.parse(params['data']);
-      }
+    this.apiAuthService.usuario.subscribe((usuario) => {
+      this.usuario = usuario;
+      this.activatedRoute.queryParams.subscribe((params) => {
+        if (params['data'] != undefined) {
+          this.dataComingFromCobrarPage = JSON.parse(params['data']);
+        }
+      });
     });
   }
 
@@ -53,7 +59,7 @@ export class FacturaPage implements OnInit {
       Nombre: this.todo.get('nombre').value,
       Apellidos: this.todo.get('apellidos').value,
       Email: this.todo.get('email').value,
-      Negocio_oid: this.dataComingFromCobrarPage.usuarioId.Negocio.Id,
+      Negocio_oid: this.usuario.Negocio.Id,
       Cobro_oid: [],
       Factura_oid: [],
     };
@@ -80,13 +86,22 @@ export class FacturaPage implements OnInit {
         this.apiFacturaService
           .createFactura(
             this.dataComingFromCobrarPage.precioTotal,
-            this.dataComingFromCobrarPage.listaComanda[0]
+            imprimirFactura
           )
           .subscribe((filename: string) => {
-            //TODO: redirect to factura page and send filename to it
+            //TODO: redirect to factura pdf viewr page and send filename to it
+            let navigationExtras: NavigationExtras = {
+              queryParams: {
+                data: JSON.stringify({
+                  filename: filename,
+                  comandaId: this.dataComingFromCobrarPage.listaComanda[0],
+                }),
+              },
+            };
+            this.router.navigate(['/pdf-viewer-factura'], navigationExtras);
           });
       });
     });
-    this.router.navigate(['/home']);
+    // this.router.navigate(['/home']);
   }
 }

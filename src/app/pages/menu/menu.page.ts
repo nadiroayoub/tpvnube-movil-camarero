@@ -45,6 +45,7 @@ export class MenuPage implements OnInit {
   comandaActiva: boolean = false;
   comandaIncrementa: number = 0;
   mainTag: HTMLCollectionOf<HTMLElement>;
+  estadoMesa;
   constructor(
     public activatedRoute: ActivatedRoute,
     private apiMenuService: ApiMenuService,
@@ -61,6 +62,7 @@ export class MenuPage implements OnInit {
     this.apiAuthService.usuario.subscribe((usuario) => {
       this.usuario = usuario;
       this.dataComing = JSON.parse(this.activatedRoute.snapshot.params.mesa);
+      this.estadoMesa = this.dataComing.Estado;
       this.categoriesMenu = [
         {
           nombre: 'Menus',
@@ -167,8 +169,6 @@ export class MenuPage implements OnInit {
 
   //#region
   confirmarComanda() {
-    console.log(this.menuItems);
-    console.log(this.platoItems);
     // show message that the command has been created
     this.presentToast('Comanda creada', 'bottom', 'success', 'checkmark').then(
       (toast) => {

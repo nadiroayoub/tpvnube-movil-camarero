@@ -93,8 +93,9 @@ export class ComandasPage implements OnInit {
             });
             this.precioTotal +=
               lineaComanda.PlatoOfLineaComanda == null
-                ? lineaComanda.MenuOfLineaComanda.Precio
-                : lineaComanda.PlatoOfLineaComanda.Precio;
+                ? lineaComanda.MenuOfLineaComanda.Precio * lineaComanda.Cantidad
+                : lineaComanda.PlatoOfLineaComanda.Precio *
+                  lineaComanda.Cantidad;
           });
           this.listaComanda.push({
             nombre: comanda.EstadoComanda,
@@ -116,7 +117,7 @@ export class ComandasPage implements OnInit {
     this.router.navigate(['/pdf-viewer'], navigationExtras);
   }
   openCobrarPage(comanda) {
-    if (comanda.Pdf == '') {
+    if (comanda.Pdf == '' || comanda.nombre == 1) {
       this.apiComandaService.get(comanda.Id).subscribe((comandaFromBack) => {
         // TODO: go to cobrar page to show comanda details and pass comanda data
         let navigationExtras: NavigationExtras = {

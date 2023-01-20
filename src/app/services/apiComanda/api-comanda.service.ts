@@ -29,6 +29,13 @@ export class ApiComandaService extends ApiService<Comanda> {
       .get<Comanda[]>(`${endpoint}`)
       .pipe(catchError(this.handleError));
   }
+  // GET /api/Comanda/DameComandasEmpleado
+  dameComandasEmpleado(empleadoId: string | number): Observable<Comanda[]> {
+    var endpoint = `${this.apiUrl}/DameComandasEmpleado?idEmpleado=${empleadoId}`;
+    return this.httpClient
+      .get<Comanda[]>(`${endpoint}`)
+      .pipe(catchError(this.handleError));
+  }
   addPostComandaSpecific(resource: PostComanda): Observable<any> {
     var endpoint = `${this.apiUrl}/Nuevo`;
     return this.httpClient

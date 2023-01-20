@@ -70,6 +70,11 @@ const routes: Routes = [
         (m) => m.PdfViewerFacturaPageModule
       ),
   },
+  {
+    path: 'mesas',
+    loadChildren: () =>
+      import('./pages/mesas/mesas.module').then((m) => m.MesasPageModule),
+  },
 ];
 
 @NgModule({

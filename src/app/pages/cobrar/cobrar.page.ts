@@ -20,6 +20,7 @@ import { EstadoComanda } from '../../model/Comanda';
 export class CobrarPage implements OnInit {
   menuItems: { nombre: string; precio: string; imagen: string }[];
   public cobroHecho = false;
+  public facturaLista = false;
   public listaComanda = [];
   public cuentaDescargada = false;
   comanda;
@@ -174,8 +175,10 @@ export class CobrarPage implements OnInit {
                 });
                 this.precioTotal +=
                   lineaComanda.PlatoOfLineaComanda == null
-                    ? lineaComanda.MenuOfLineaComanda.Precio
-                    : lineaComanda.PlatoOfLineaComanda.Precio;
+                    ? lineaComanda.MenuOfLineaComanda.Precio *
+                      lineaComanda.Cantidad
+                    : lineaComanda.PlatoOfLineaComanda.Precio *
+                      lineaComanda.Cantidad;
               }
             );
             this.listaComanda.push({
@@ -221,15 +224,17 @@ export class CobrarPage implements OnInit {
       }
     }
     console.log(this.tipoCobroTarjeta);
+    // this.cobroHecho = !this.cobroHecho;
   }
   openCuenta() {
     // show message to await the creation of ticket
     this.toastController.create;
-    this.presentToast(
-      'Ticket creado... Espere un momento',
+    this.specificPresentToast(
+      'El ticket se está Cargando...',
       'bottom',
       'success',
-      'checkmark'
+      'checkmark',
+      'loading-notification'
     ).then((toast) => {
       toast.present();
     });
@@ -275,7 +280,7 @@ export class CobrarPage implements OnInit {
       });
   }
   openFactura() {
-    if (this.cobroHecho === true) {
+    if (this.facturaLista === true) {
       var data = {
         listaComanda: this.listaComanda,
         precioTotal: this.precioTotal,
@@ -356,6 +361,7 @@ export class CobrarPage implements OnInit {
                       'checkmark'
                     ).then((toast) => {
                       toast.present();
+                      this.facturaLista = true;
                     });
                   });
                 return res;
@@ -400,6 +406,22 @@ export class CobrarPage implements OnInit {
       duration: 2000,
       position: position,
       color: estado,
+    });
+    return toast;
+  }
+  async specificPresentToast(
+    message: string,
+    position: 'top' | 'middle' | 'bottom',
+    estado: 'success' | 'danger',
+    icon: 'checkmark' | 'close',
+    classname
+  ) {
+    const toast = await this.toastController.create({
+      message: `<ion-spinner></ion-spinner> ${message}`,
+      duration: 2000,
+      position: position,
+      color: estado,
+      cssClass: 'loading-notification',
     });
     return toast;
   }

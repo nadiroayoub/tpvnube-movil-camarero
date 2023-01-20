@@ -50,7 +50,7 @@
             menuImagenes
             ngClass="menu-card"
           >
-            <ion-item>
+            <!-- <ion-item>
               <ion-avatar slot="start">
                 <img
                   [src]=" menuImagenes[i] == '' ? 'assets/images/no_image_available.png' : menuImagenes[i]"
@@ -60,7 +60,30 @@
                 <h5>{{menuItem.nombre}}</h5>
                 <p>{{menuItem.precio | currency : "EUR" : "symbol" }}</p>
               </ion-label>
-            </ion-item>
+            </ion-item> -->
+            <ion-card
+              style="
+                box-shadow: none !important;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+              "
+            >
+              <img
+                style="max-width: 50%"
+                [src]=" menuImagenes[i] == '' ? 'assets/images/no_image_available.png' : menuImagenes[i]"
+              />
+              <ion-card-header>
+                <ion-card-title style="font-size: 0.8rem"
+                  >{{menuItem.nombre}}
+                  <span style="font-weight: bolder"
+                    >{{menuItem.precio | currency : "EUR" : "symbol" }}</span
+                  ></ion-card-title
+                >
+              </ion-card-header>
+            </ion-card>
             <ion-footer>
               <ion-row>
                 <ion-col center text-center>
@@ -86,10 +109,7 @@
             </ion-footer>
           </ion-card>
         </div>
-        <div
-          class="buttons"
-          [ngClass]="{'withPagarButton': dataComing.Estado !=  1}"
-        >
+        <div class="buttons" [ngClass]="{'withPagarButton': estadoMesa !=  1}">
           <ion-button
             color="primary"
             expand="block"
@@ -104,7 +124,7 @@
             [disabled]=""
             class="button-two"
             (click)="finalizarComanda()"
-            [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
+            [ngStyle]="{'display': estadoMesa === 1 ? 'none' : 'inline-block'}"
             >Pagar</ion-button
           >
           <ion-button
@@ -133,17 +153,29 @@
             *ngFor="let platoItem of platoItems;let i = index"
             class="plato-card"
           >
-            <ion-item>
-              <ion-avatar slot="start">
-                <img
-                  [src]=" platoImagenes[i] == '' ? 'assets/images/no_image_available.png' : platoImagenes[i]"
-                />
-              </ion-avatar>
-              <ion-label>
-                <h6>{{platoItem.nombre}}</h6>
-                <p>{{platoItem.precio | currency : "EUR" : "symbol" }}</p>
-              </ion-label>
-            </ion-item>
+            <ion-card
+              style="
+                box-shadow: none !important;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+              "
+            >
+              <img
+                style="max-width: 50%"
+                [src]=" platoImagenes[i] == '' ? 'assets/images/no_image_available.png' : platoImagenes[i]"
+              />
+              <ion-card-header>
+                <ion-card-title style="font-size: 0.8rem"
+                  >{{platoItem.nombre}}
+                  <span style="font-weight: bolder"
+                    >{{platoItem.precio | currency : "EUR" : "symbol" }}</span
+                  ></ion-card-title
+                >
+              </ion-card-header>
+            </ion-card>
             <ion-footer>
               <ion-row>
                 <ion-col center text-center>
@@ -169,10 +201,7 @@
             </ion-footer>
           </ion-card>
         </div>
-        <div
-          class="buttons"
-          [ngClass]="{'withPagarButton': dataComing.Estado !=  1}"
-        >
+        <div class="buttons" [ngClass]="{'withPagarButton': estadoMesa !=  1}">
           <ion-button
             color="primary"
             expand="block"
@@ -187,7 +216,7 @@
             expand="block"
             [disabled]=""
             (click)="finalizarComanda()"
-            [ngStyle]="{'display': dataComing.Estado === 1 ? 'none' : 'inline-block'}"
+            [ngStyle]="{'display': estadoMesa === 1 ? 'none' : 'inline-block'}"
             class="button-two"
             >Pagar</ion-button
           >
@@ -216,7 +245,9 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <!-- <img src="assets/icon/notification-ringing.png" alt="" width="25px" /> -->
+      <ion-button [routerLink]="['/mesas']">
+        <img src="assets/icon/table.png" alt="" width="20px" />
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

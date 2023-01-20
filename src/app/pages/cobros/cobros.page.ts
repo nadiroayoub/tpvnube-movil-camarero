@@ -31,8 +31,8 @@ export class CobrosPage implements OnInit {
   dataSourceFromService: any[] = [];
   dataSource = new MatTableDataSource<any>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private http: HttpClient,
@@ -41,38 +41,38 @@ export class CobrosPage implements OnInit {
     private apiComandaService: ApiComandaService
   ) {}
   ngOnInit(): void {
-    // this.dataSource.sort = this.sort;
-    // setTimeout(() => (this.dataSource.paginator = this.paginator));
-    console.log(this.usuario);
-    setTimeout(() => {
-      this.apiAuthService.usuario.subscribe((res) => {
-        this.usuario = res;
-        console.log(this.usuario);
-        this.apiCobroService
-          .getAllCobroOfEmpleado(this.usuario.Id)
-          .subscribe((cobros) => {
-            // get Comanda of cobro
-            cobros.forEach((cobro) => {
-              this.apiComandaService
-                .getComandaOfCobro(cobro.Id)
-                .subscribe((Comanda) => {
-                  this.dataSourceFromService.push({
-                    mesa: Comanda.MesaOfComanda.Numero,
-                    fecha: cobro.Fecha,
-                    importe: cobro.Monto,
-                  });
+    this.apiAuthService.usuario.subscribe((res) => {
+      this.usuario = res;
+      this.apiCobroService
+        .getAllCobroOfEmpleado(this.usuario.Id)
+        .subscribe((cobros) => {
+          // get Comanda of cobro
+          cobros.forEach((cobro) => {
+            this.apiComandaService
+              .getComandaOfCobro(cobro.Id)
+              .subscribe((Comanda) => {
+                this.dataSource.data.push({
+                  mesa: Comanda.MesaOfComanda.Numero,
+                  fecha: cobro.Fecha,
+                  importe: cobro.Monto,
                 });
-            });
-            this.dataSource.data = this.dataSourceFromService;
-            console.log(this.dataSource.data);
-            // this.dataSource.sort = this.sort;
-            // this.dataSource.paginator = this.paginator;
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+              });
           });
-      });
-    }, 500);
+        });
+    });
   }
-  ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+  ionViewDidEnter() {
+    // this.dataSource.data = this.dataSourceFromService;
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
   }
+  // ngAfterViewInit(): void {
+  //   this.dataSource.sort = this.sort;
+  //   this.dataSource.paginator = this.paginator;
+  // }
+  // SetTableProperties() {
+  //   this.dataSource.paginator = this.paginator;
+  // }
 }
